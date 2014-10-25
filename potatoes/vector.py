@@ -1,6 +1,5 @@
 import math
 
-
 class Vector:
     @staticmethod
     def to_polar(vect):
@@ -31,8 +30,13 @@ class Vector:
     def __neg__(self):
         return Vector(-self.x, -self.y)
     def __mul__(self, other):
-        # returns dot product of vectors, not cross
-        return self.x*other.x + self.y*other.y
+        if isinstance(other, int) or isinstance(other, float):
+            return Vector(self.x * other, self.y * other)
+        else:
+            # returns dot product of vectors, not cross
+            return self.x*other.x + self.y*other.y
+    def __rmul__(self, other):
+        return self.__mul__(other)
     def __str__(self):
         return '(' + str(self.x) + ', ' + str(self.y) + ')'
 
