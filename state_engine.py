@@ -23,8 +23,8 @@ class StateEngine:
         self.states[-1].clean_up()
         self.states.pop()
 
-    def update(self):
-        self.states[-1].update()
+    def update(self, delta):
+        self.states[-1].update(delta)
 
     def draw(self):
         self.states[-1].draw()
@@ -40,20 +40,19 @@ class State:
     def clean_up(self):
         self.game.reset_frame()
 
-    def update(self):
+    def update(self, delta):
         pass
 
 class GameState(State):
     def __init__(self, game):
         super().__init__(game)
-        self.time = time.time()
+        self.cumulative_time = 0 # Holds cumulative time of every update
         self.score = 0
         self.is_ended = False
         self.game.set_running(True)
         self.last_time = time.time()
-        self.tick_count = 0
-        self.tick_average = 0
         self.frames = 0
+        self.frame_count = 0
 
         # Set up widgets
         self.canvas = Canvas(self.game.frame, width=game.width,
@@ -70,20 +69,23 @@ class GameState(State):
             self.game.root.unbind("<KeyRelease-%s>")
         self.game.root.unbind("<Key-P>")
 
-    def update(self):
-        super().update()
+    def update(self, delta):
+        self.canvas.delete("all")
+        super().update(delta)
+        self.cumulative_time += delta
+        self.frames += 1
+        # If second has elapsed, get FPS
+        if self.cumulative_time > 1:
+            self.cumulative_time -= 1
+            self.frame_count = self.frames
+            self.frames = 0
+        self.canvas.create_text(20, 20, text='FPS: ' + str(self.frame_count),
+                                font=(Game.FONT, 12),
+                                fill=Game.TEXT_COLOUR,
+                                anchor=NW)
         if self.game.is_running():
-            self.tick_count += 1
-            t = time.time()
-            if t - self.time > 1:
-                self.frames += 1
-                self.tick_average += self.tick_count
-                self.time = t
-                print(self.tick_average/self.frames, end="\r")
-                self.tick_count = 0
-
+            pass
             # Resets the canvas to avoid trails.
-            self.canvas.delete("all")
 
     # Miscellaneous
     def pause(self, event):
@@ -102,7 +104,7 @@ class GameState(State):
 class Game:
     # Class variables and methods.
     BACKGROUND_COLOUR = 'black'
-    TEXT_COLOUR = "#00507B"
+    TEXT_COLOUR = "#FFFFFF"
     FONT = "Menlo"
     FONT_SIZE = 15
     TICK_TIME = 16
@@ -120,6 +122,7 @@ class Game:
         self.switch_state = None
         self.user_name = "Gardiner"
         self.state_engine = StateEngine(self)
+        self.last_update_time = time.time()
 
         # Create the game window
         self.root = Tk()
@@ -194,10 +197,13 @@ class Game:
 
     # Game loop
     def game_loop(self):
+        time_now = time.time()
         if self.switch_state is not None:
             self.state_engine.change_state(self.switch_state)
             self.switch_state = None
-        self.state_engine.update()
+        delta = time_now - self.last_update_time
+        self.last_update_time = time_now
+        self.state_engine.update(delta)
         self.root.after(self.TICK_TIME, self.game_loop)
 
 app = Game(800, 500)
