@@ -1,7 +1,4 @@
 from tkinter import *
-from operator import itemgetter
-import random
-import math
 import time
 
 
