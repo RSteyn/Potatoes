@@ -1,9 +1,9 @@
+from .vector import Vector
 
 
 class Entity:
     def __init__(self):
-        self._x = 0
-        self._y = 0
+        self._pos = Vector(0, 0)
 
     def update(self, delta):
         pass
@@ -20,6 +20,5 @@ class Shootable:
 
 
 class Movable:
-    def move(self, x, y):
-        self._x += x
-        self._y += y
+    def move(self, by):
+        self._pos += by

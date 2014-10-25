@@ -1,5 +1,6 @@
-__author__ = 'rileysteyn'
 import math
+
+
 class Vector:
     @staticmethod
     def to_polar(vect):
