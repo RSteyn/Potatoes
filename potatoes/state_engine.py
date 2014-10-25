@@ -211,4 +211,3 @@ class Game:
         self.state_engine.update(delta)
         self.root.after(self.TICK_TIME, self.game_loop)
 
-app = Game(800, 500)
