@@ -1,4 +1,5 @@
 from tkinter import *
+from .player import *
 import time
 
 
@@ -46,7 +47,7 @@ class GameState(State):
     def __init__(self, game):
         super().__init__(game)
         self.cumulative_time = 0  # Holds cumulative time of every update
-        self.score = 0
+
         self.is_ended = False
         self.game.running = True
         self.last_time = time.time()
@@ -60,13 +61,17 @@ class GameState(State):
         self.canvas.pack()
         self.game.root.bind("p", self.pause)
 
+        # Game-specific, rather than engine-specific variables
+        self.score = 0
+        self.player = Player(self.canvas)
+
     def clean_up(self):
         super().clean_up()
         # Simply goes through events bound and unbinds them
         self.game.root.unbind("<Key-P>")
 
     def update(self, delta):
-        self.canvas.delete("all")
+        self.canvas.delete('FPS_text')
         super().update(delta)
         self.cumulative_time += delta
         self.frames += 1
@@ -78,7 +83,8 @@ class GameState(State):
         self.canvas.create_text(20, 20, text='FPS: ' + str(self.frame_count),
                                 font=(Game.FONT, 12),
                                 fill=Game.TEXT_COLOUR,
-                                anchor=NW)
+                                anchor=NW,
+                                tag='FPS_text')
         if self.game.running:
             pass
             # Resets the canvas to avoid trails.

@@ -12,8 +12,8 @@ class Entity:
 
 class Renderable:
     def __init__(self, x, y, img_path, canvas):
-        pi = PhotoImage(file=img_path)
-        self._img = canvas.create_image(50, 50, image=pi)
+        self.pi = PhotoImage(file=img_path)
+        self._img = canvas.create_image(x, y, image=self.pi)
 
     @property
     def img(self):
