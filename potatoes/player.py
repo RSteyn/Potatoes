@@ -47,9 +47,7 @@ class Player(Entity, Movable, Renderable, Shootable):
                      lambda _: self.shoot(self._pos.x,
                                           self._pos.y,
                                           self.direction,
-                                          canvas
-                                          )
-                     )
+                                          canvas))
 
         # Create direction pointer
         self._oval = canvas.create_oval(

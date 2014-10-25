@@ -1,7 +1,5 @@
 from potatoes.vector import Vector
 
-__author__ = 'rileysteyn'
-
 
 class Movable:
     def __init__(self, velocity=0, direction=0):
