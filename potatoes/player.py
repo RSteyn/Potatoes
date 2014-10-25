@@ -1,4 +1,4 @@
-from .attributes import *
+from .entity import *
 
 
 class Player(Entity, Movable, Renderable, Shootable):
