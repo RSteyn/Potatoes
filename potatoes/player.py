@@ -10,7 +10,7 @@ class Player(Entity, Movable, Renderable, Shootable):
     def __init__(self, bind_to, canvas):
         Entity.__init__(self)
         Movable.__init__(self)
-        Renderable.__init__(self, self._pos.x, self._pos.y,
+        Renderable.__init__(self, self._pos._x, self._pos._y,
                             'resources/dean.gif', canvas)
         Shootable.__init__(self)
 
@@ -48,4 +48,4 @@ class Player(Entity, Movable, Renderable, Shootable):
     def update(self, delta, gx):
         super().update(delta, gx)
         self.move()
-        gx.coords(self.img, (self._pos.x, self._pos.y))
+        gx.coords(self.img, (self._pos._x, self._pos._y))
