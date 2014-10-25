@@ -20,5 +20,16 @@ class Shootable:
 
 
 class Movable:
-    def move(self, by):
-        self._pos += by
+    def __init__(self):
+        self._moving = Vector(0, 0)
+
+    @property
+    def moving(self):
+        return self._moving
+
+    @moving.setter
+    def moving(self, val):
+        self._moving = val
+
+    def move(self):
+        self._pos += self._moving
