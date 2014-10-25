@@ -10,7 +10,7 @@ class Asteroid(Entity, Movable, Renderable):
         Entity.__init__(self)
         Movable.__init__(self)
         Renderable.__init__(self, self._pos.x, self._pos.y,
-                            'resources/dean.gif', canvas)
+                            'resources/potato_chip.gif', canvas)
         self._pos = Vector(400, 250)
         dir = 2*math.pi * random.random()
         vel = Asteroid.VEL_RANGE * random.random() + Asteroid.MIN_VEL
