@@ -1,10 +1,10 @@
 from . import Entity
-from ..attributes import Movable, Renderable, Shootable
+from ..attributes import Movable, Renderable, Shootable, Killable
 from ..vector import Vector
 import math
 
 
-class Alien(Entity, Movable, Renderable, Shootable):
+class Alien(Entity, Movable, Renderable, Shootable, Killable):
     MOVE_VELOCITY = 80              # TODO: Balance this
     ROTATE_VELOCITY = 0.1           # TODO: Balance this
     ACCEL = 125                     # TODO: Balance this
@@ -18,6 +18,7 @@ class Alien(Entity, Movable, Renderable, Shootable):
         Renderable.__init__(self, self._pos.x, self._pos.y,
                             'resources/dean.gif', canvas)
         Shootable.__init__(self)
+        Killable.__init__(self, 5)
 
         self._rotating = 0
         self._target = player

@@ -1,10 +1,10 @@
-from ..attributes import Movable, Renderable
+from ..attributes import Movable, Renderable, Killable
 from .entity import Entity
 from ..values import GAME_WIDTH, GAME_HEIGHT
 import random
 import math
 
-class Asteroid(Entity, Movable, Renderable):
+class Asteroid(Entity, Movable, Renderable, Killable):
     MAX_VEL = 50    # TODO: Balance this
     MIN_VEL = 20    # TODO: Balance this
     ACCEL = 125     # TODO: Balance this
@@ -17,6 +17,7 @@ class Asteroid(Entity, Movable, Renderable):
         Movable.__init__(self, velocity=vel, direction=dir, accel=self.ACCEL)
         Renderable.__init__(self, self._pos.x, self._pos.y,
                             'resources/potato_chip.gif', canvas)
+        Killable.__init__(self, 1)
     def update(self, delta, gx):
         self.move(delta)
         gx.coords(self.img, (self._pos.x, self._pos.y))

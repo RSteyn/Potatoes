@@ -1,9 +1,10 @@
 from ..attributes.movable import Movable
 from ..attributes.renderable import Renderable
+from ..attributes.killable import Killable
 from .entity import Entity
 
 
-class Bullet(Entity, Movable, Renderable):
+class Bullet(Entity, Movable, Renderable, Killable):
     VELOCITY = 200          # TODO: Balance this
     ACCEL = 125             # TODO: Balance this
 
@@ -12,6 +13,7 @@ class Bullet(Entity, Movable, Renderable):
         Movable.__init__(self, self.VELOCITY, direction, self.ACCEL)
         Renderable.__init__(self, self._pos.x, self._pos.y,
                             'resources/dean.gif', canvas)
+        Killable.__init__(self, 1)
         self.shooter = shooter  # Stores reference to who shot this bullet.
 
     def update(self, delta, gx):

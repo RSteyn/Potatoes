@@ -1,10 +1,10 @@
 from .entity import Entity
-from ..attributes import Movable, Renderable, Shootable
+from ..attributes import Movable, Renderable, Shootable, Killable
 from ..vector import Vector
 import math
 
 
-class Player(Entity, Movable, Renderable, Shootable):
+class Player(Entity, Movable, Renderable, Shootable, Killable):
     CW = 1
     ACW = -1
 
@@ -21,6 +21,7 @@ class Player(Entity, Movable, Renderable, Shootable):
         Renderable.__init__(self, self._pos.x, self._pos.y,
                             'resources/dean.gif', canvas)
         Shootable.__init__(self)
+        Killable.__init__(self, 1)
 
         self._rotating = 0
 
