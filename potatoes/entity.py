@@ -6,7 +6,7 @@ class Entity:
     def __init__(self):
         self._pos = Vector(0, 0)
 
-    def update(self, delta):
+    def update(self, delta, gx):
         pass
 
 

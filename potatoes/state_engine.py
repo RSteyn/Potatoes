@@ -1,6 +1,6 @@
-from tkinter import *
-from .player import *
 import time
+
+from .player import *
 
 
 class StateEngine:
@@ -63,7 +63,7 @@ class GameState(State):
 
         # Game-specific, rather than engine-specific variables
         self.score = 0
-        self.player = Player(self.canvas)
+        self.player = Player(self.game.root, self.canvas)
 
     def clean_up(self):
         super().clean_up()
@@ -86,7 +86,7 @@ class GameState(State):
                                 anchor=NW,
                                 tag='FPS_text')
         if self.game.running:
-            pass
+            self.player.update(delta, self.canvas)
             # Resets the canvas to avoid trails.
 
     # Miscellaneous
