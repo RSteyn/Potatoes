@@ -3,8 +3,8 @@ from tkinter import *
 
 
 class Entity:
-    def __init__(self):
-        self._pos = Vector(0, 0)
+    def __init__(self, x=0, y=0):
+        self._pos = Vector(x, y)
 
     def update(self, delta, gx):
         pass
@@ -26,9 +26,9 @@ class Shootable:
 
 
 class Movable:
-    def __init__(self):
+    def __init__(self, direction=0):
         self._moving = Vector(0, 0, polar=True)
-        self._direction = 0
+        self._direction = direction
 
     @property
     def velocity(self):
