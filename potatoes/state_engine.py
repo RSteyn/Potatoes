@@ -1,8 +1,7 @@
 import time
-
-from .player import Player
-from .asteroid import Asteroid
 from tkinter import *
+
+from .entity import Player, Asteroid
 
 
 class StateEngine:

@@ -1,4 +1,4 @@
-from ..bullet import Bullet
+from ..entity.bullet import Bullet
 
 class Shootable:
     def __init__(self):

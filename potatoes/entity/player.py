@@ -1,6 +1,6 @@
-from .entity import Entity
-from .attributes import Movable, Renderable, Shootable
-from .vector import Vector
+from . import Entity
+from ..attributes import Movable, Renderable, Shootable
+from ..vector import Vector
 
 
 class Player(Entity, Movable, Renderable, Shootable):

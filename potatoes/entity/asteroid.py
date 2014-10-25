@@ -1,5 +1,5 @@
-from .attributes import Movable, Renderable
-from .entity import Entity
+from ..attributes import Movable, Renderable
+from . import Entity
 import random
 import math
 
