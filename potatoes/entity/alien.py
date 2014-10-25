@@ -44,7 +44,7 @@ class Alien(Entity, Movable, Renderable, Shootable):
     def update(self, delta, gx):
         super().update(delta, gx)
         self.ai_update(delta, gx)
-        self.rotate(self._rotating)
+        self.rotate(self._rotating, delta)
         self.move(delta)
         self.update_bullets(delta, gx)
         gx.coords(self.img, (self._pos.x, self._pos.y))

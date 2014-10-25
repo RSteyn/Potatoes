@@ -27,8 +27,8 @@ class Movable:
         self._direction = val
         self._moving = Vector(self._moving.magnitude, val, polar=True)
 
-    def rotate(self, theta):
-        self._moving = self._moving.rotate(theta)
+    def rotate(self, theta, delta):
+        self._moving = self._moving.rotate(theta * delta)
         if theta != 0:
             self._direction = self._moving.direction
 
