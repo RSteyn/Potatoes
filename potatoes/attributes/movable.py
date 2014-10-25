@@ -28,5 +28,5 @@ class Movable:
         if theta != 0:
             self._direction = self._moving.direction
 
-    def move(self):
-        self._pos += self._moving
+    def move(self, delta):
+        self._pos += self._moving * delta

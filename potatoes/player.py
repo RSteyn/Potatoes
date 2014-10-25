@@ -2,11 +2,12 @@ from .entity import Entity
 from .attributes import Movable, Renderable, Shootable
 from .vector import Vector
 
+
 class Player(Entity, Movable, Renderable, Shootable):
     CW = 1
     ACW = -1
 
-    MOVE_VELOCITY = 5           # TODO: Balance this
+    MOVE_VELOCITY = 100           # TODO: Balance this
     ROTATE_VELOCITY = 0.1
     DIRECTION_OVAL_DISTANCE = 100
     DIRECTION_OVAL_COLOR = '#ff0000'
@@ -80,7 +81,7 @@ class Player(Entity, Movable, Renderable, Shootable):
     def update(self, delta, gx):
         super().update(delta, gx)
         self.rotate(self._rotating)
-        self.move()
+        self.move(delta)
         self.update_bullets(delta, gx)
         gx.coords(self.img, (self._pos.x, self._pos.y))
         new_oval_loc = self._direction_oval_loc_()

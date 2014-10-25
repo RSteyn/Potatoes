@@ -4,8 +4,8 @@ import random
 import math
 
 class Asteroid(Entity, Movable, Renderable):
-    MAX_VEL = 5  # TODO: Balance this
-    MIN_VEL = 2  # TODO: Balance this
+    MAX_VEL = 50  # TODO: Balance this
+    MIN_VEL = 20  # TODO: Balance this
     VEL_RANGE = MAX_VEL - MIN_VEL
     def __init__(self, canvas):
         Entity.__init__(self, 400, 250)
@@ -15,5 +15,5 @@ class Asteroid(Entity, Movable, Renderable):
         Renderable.__init__(self, self._pos.x, self._pos.y,
                             'resources/potato_chip.gif', canvas)
     def update(self, delta, gx):
-        self.move()
+        self.move(delta)
         gx.coords(self.img, (self._pos.x, self._pos.y))
