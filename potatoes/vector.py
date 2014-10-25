@@ -39,14 +39,3 @@ class Vector:
         return self.x**2 + self.y**2
     def get_len(self):
         return math.sqrt(self.get_len_squared())
-
-a = Vector(0, 0)
-print(a)
-b = Vector(1, 1)
-c = Vector(-1, -1)
-print(b+c)
-print(b-c)
-print(b*c)
-print(b.get_len_squared())
-print(Vector.normalise(b))
-print(Vector.normalise(b).get_len())
