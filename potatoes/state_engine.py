@@ -45,6 +45,9 @@ class State:
 
 
 class GameState(State):
+    MAX_ASTEROIDS = 5
+    ASTEROID_INTERVAL = 5
+
     def __init__(self, game):
         super().__init__(game)
         self.cumulative_time = 0  # Holds cumulative time of every update
@@ -65,7 +68,8 @@ class GameState(State):
         # Game-specific, rather than engine-specific variables
         self.score = 0
         self.player = Player(self.game.root, self.canvas)
-        self.asteroid = Asteroid(self.canvas)
+        self.asteroids = [Asteroid(self.canvas)]
+        self._asteroid_spawn_timer = 0
         self.alien = Alien(self.canvas, self.player)
 
     def clean_up(self):
@@ -90,7 +94,13 @@ class GameState(State):
                                 tag='FPS_text')
         if self.game.running:
             self.player.update(delta, self.canvas)
-            self.asteroid.update(delta, self.canvas)
+            self._asteroid_spawn_timer += delta
+            if self._asteroid_spawn_timer >= self.ASTEROID_INTERVAL and \
+                    len(self.asteroids) < self.MAX_ASTEROIDS:
+                self.asteroids.append(Asteroid(self.canvas))
+                self._asteroid_spawn_timer = 0
+            for asteroid in self.asteroids:
+                asteroid.update(delta, self.canvas)
             self.alien.update(delta, self.canvas)
             # Resets the canvas to avoid trails.
 
@@ -103,8 +113,11 @@ class GameState(State):
                                     self.game.height // 2,
                                     text="Paused",
                                     font=(Game.FONT, 50),
-                                    fill=Game.TEXT_COLOUR)
+                                    fill=Game.TEXT_COLOUR,
+                                    tag='pause_text')
             self.game.running = not self.game.running
+            if self.game.running:
+                self.canvas.delete('pause_text')
 
     # Specific game-related things
 

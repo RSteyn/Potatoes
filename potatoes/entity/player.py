@@ -16,7 +16,7 @@ class Player(Entity, Movable, Renderable, Shootable):
     DIRECTION_OVAL_WIDTH = 5
 
     def __init__(self, bind_to, canvas):
-        Entity.__init__(self)
+        Entity.__init__(self, 400, 250)
         Movable.__init__(self, 0, 0, self.ACCEL)
         Renderable.__init__(self, self._pos.x, self._pos.y,
                             'resources/dean.gif', canvas)
