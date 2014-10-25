@@ -3,7 +3,11 @@ from .entity import *
 
 class Player(Entity, Movable, Renderable, Shootable):
     def __init__(self, bind_to):
-        super().__init__()
+        Entity.__init__(self)
+        Movable.__init__(self)
+        Renderable.__init__(self, 'resources/dean.gif', bind_to)
+        Shootable.__init__(self)
+
         self._vel = 5           # TODO: Balance this
         bind_to.bind('<KeyPress-Up>', lambda _: self.start_moving_y(-1))
         bind_to.bind('<KeyPress-Down>', lambda _: self.start_moving_y(1))
@@ -30,6 +34,3 @@ class Player(Entity, Movable, Renderable, Shootable):
     def update(self, delta):
         super().update(delta)
         self.move()
-
-    def render(self, gx):
-        super().render(gx)

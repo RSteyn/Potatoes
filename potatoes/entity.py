@@ -1,4 +1,5 @@
 from .vector import Vector
+from tkinter import *
 
 
 class Entity:
@@ -10,8 +11,13 @@ class Entity:
 
 
 class Renderable:
-    def render(self, gx):
-        pass
+    def __init__(self, img_path, canvas):
+        pi = PhotoImage(file=img_path)
+        self._img = canvas.create_image(pi)
+
+    @property
+    def img(self):
+        return self._img
 
 
 class Shootable:
