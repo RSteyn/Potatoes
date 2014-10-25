@@ -84,8 +84,7 @@ class GameState(State):
             # Resets the canvas to avoid trails.
 
     # Miscellaneous
-    # noinspection PyUnusedLocal
-    def pause(self, event):
+    def pause(self, _):
         """ Method to toggle the is_running boolean in the game
         """
         if not self.is_ended:
