@@ -1,7 +1,7 @@
 import time
 from tkinter import *
 
-from .entity import Player, Asteroid
+from .entity import Player, Asteroid, Alien
 
 
 class StateEngine:
@@ -66,6 +66,7 @@ class GameState(State):
         self.score = 0
         self.player = Player(self.game.root, self.canvas)
         self.asteroid = Asteroid(self.canvas)
+        self.alien = Alien(self.canvas, self.player)
 
     def clean_up(self):
         super().clean_up()
@@ -90,6 +91,7 @@ class GameState(State):
         if self.game.running:
             self.player.update(delta, self.canvas)
             self.asteroid.update(delta, self.canvas)
+            self.alien.update(delta, self.canvas)
             # Resets the canvas to avoid trails.
 
     # Miscellaneous

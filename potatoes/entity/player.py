@@ -22,8 +22,6 @@ class Player(Entity, Movable, Renderable, Shootable):
         Shootable.__init__(self)
 
         self._rotating = 0
-        self._rotating_cw_ = False
-        self._rotating_acw_ = False
 
         # Movement event bindings
         bind_to.bind('<KeyPress-Up>',
