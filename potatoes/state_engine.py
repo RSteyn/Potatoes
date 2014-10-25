@@ -45,7 +45,7 @@ class State:
 class GameState(State):
     def __init__(self, game):
         super().__init__(game)
-        self.cumulative_time = 0 # Holds cumulative time of every update
+        self.cumulative_time = 0  # Holds cumulative time of every update
         self.score = 0
         self.is_ended = False
         self.game.running = True
@@ -84,6 +84,7 @@ class GameState(State):
             # Resets the canvas to avoid trails.
 
     # Miscellaneous
+    # noinspection PyUnusedLocal
     def pause(self, event):
         """ Method to toggle the is_running boolean in the game
         """
