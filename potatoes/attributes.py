@@ -2,7 +2,8 @@
 
 class Entity:
     def __init__(self):
-        pass
+        self._x = 0
+        self._y = 0
 
     def update(self, delta):
         pass
@@ -29,4 +30,5 @@ class Movable:
         pass
 
     def move(self, x, y):
-        pass
+        self._x += x
+        self._y += y
