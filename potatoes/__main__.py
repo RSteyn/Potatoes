@@ -1,3 +1,3 @@
-import potatoes
+from potatoes import Game, GAME_WIDTH, GAME_HEIGHT
 
-potatoes.Game(800, 500)
+Game(GAME_WIDTH, GAME_HEIGHT)

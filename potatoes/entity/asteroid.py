@@ -1,5 +1,6 @@
 from ..attributes import Movable, Renderable
 from .entity import Entity
+from ..values import GAME_WIDTH, GAME_HEIGHT
 import random
 import math
 
@@ -9,8 +10,8 @@ class Asteroid(Entity, Movable, Renderable):
     ACCEL = 125     # TODO: Balance this
 
     def __init__(self, canvas):
-        Entity.__init__(self, random.randrange(0, 800),
-                        random.randrange(0, 500))
+        Entity.__init__(self, random.randrange(0, GAME_WIDTH),
+                        random.randrange(0, GAME_HEIGHT))
         dir = 2*math.pi * random.random()
         vel = random.randrange(self.MIN_VEL, self.MAX_VEL)
         Movable.__init__(self, velocity=vel, direction=dir, accel=self.ACCEL)
