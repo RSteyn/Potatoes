@@ -1,6 +1,6 @@
 from ..attributes.movable import Movable
 from ..attributes.renderable import Renderable
-from . import Entity
+from .entity import Entity
 
 
 class Bullet(Entity, Movable, Renderable):

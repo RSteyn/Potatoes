@@ -1,4 +1,4 @@
-from . import Entity
+from .entity import Entity
 from ..attributes import Movable, Renderable, Shootable
 from ..vector import Vector
 
