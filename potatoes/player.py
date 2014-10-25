@@ -1,6 +1,6 @@
-from . import attributes as attr
+from .attributes import *
 
 
-class Player(attr.Movable, attr.Renderable, attr.Shootable):
+class Player(Entity, Movable, Renderable, Shootable):
     def __init__(self):
         super().__init__()

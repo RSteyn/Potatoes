@@ -1,5 +1,10 @@
 
 
+class Entity:
+    def __init__(self):
+        pass
+
+
 class Renderable:
     def __init__(self):
         pass
