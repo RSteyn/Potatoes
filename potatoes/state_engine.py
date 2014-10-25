@@ -1,8 +1,8 @@
 import time
 
-from .player import *
-from .asteroid import *
-
+from .player import Player
+from .asteroid import Asteroid
+from tkinter import *
 
 class StateEngine:
     def __init__(self, game):

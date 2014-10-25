@@ -1,5 +1,6 @@
-from .entity import *
-
+from .entity import Entity
+from .attributes import Movable, Renderable, Shootable
+from .vector import Vector
 
 class Player(Entity, Movable, Renderable, Shootable):
     CW = 1
@@ -22,6 +23,7 @@ class Player(Entity, Movable, Renderable, Shootable):
         self._rotating_cw_ = False
         self._rotating_acw_ = False
 
+        # Movement event bindings
         bind_to.bind('<KeyPress-Up>',
                      lambda _: self.start_moving_forward())
         bind_to.bind('<KeyPress-Down>',
@@ -40,6 +42,16 @@ class Player(Entity, Movable, Renderable, Shootable):
         bind_to.bind('<KeyRelease-Right>',
                      lambda _: self.stop_rotating())
 
+        # Bind shooting
+        bind_to.bind('<space>',
+                     lambda _: self.shoot(self._pos.x,
+                                          self._pos.y,
+                                          self.direction,
+                                          canvas
+                                          )
+                     )
+
+        # Create direction pointer
         self._oval = canvas.create_oval(
             0, 0, self.DIRECTION_OVAL_WIDTH, self.DIRECTION_OVAL_WIDTH,
             outline=self.DIRECTION_OVAL_COLOR
@@ -71,6 +83,7 @@ class Player(Entity, Movable, Renderable, Shootable):
         super().update(delta, gx)
         self.rotate(self._rotating)
         self.move()
+        self.update_bullets(delta, gx)
         gx.coords(self.img, (self._pos.x, self._pos.y))
         new_oval_loc = self._direction_oval_loc_()
         gx.coords(self._oval, self._oval_bbox_(new_oval_loc))
