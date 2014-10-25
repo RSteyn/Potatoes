@@ -1,9 +1,9 @@
-__author__ = 'rileysteyn'
 from tkinter import *
 from operator import itemgetter
 import random
 import math
 import time
+
 
 class StateEngine:
     def __init__(self, game):
@@ -29,6 +29,7 @@ class StateEngine:
     def draw(self):
         self.states[-1].draw()
 
+
 class State:
     """ This is meant to be a virtual class.  Python does not really
     support this, but making one makes me feel better and allows me
@@ -42,6 +43,7 @@ class State:
 
     def update(self):
         pass
+
 
 class GameState(State):
     def __init__(self, game):
@@ -98,6 +100,7 @@ class GameState(State):
             self.game.set_running(not self.game.is_running())
 
     # Specific game-related things
+
 
 class Game:
     # Class variables and methods.
