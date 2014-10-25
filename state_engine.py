@@ -66,9 +66,6 @@ class GameState(State):
     def clean_up(self):
         super().clean_up()
         # Simply goes through events bound and unbinds them
-        for char in ["Left", "Right", "Up", "Down"]:
-            self.game.root.unbind("<Key-%s>" % char)
-            self.game.root.unbind("<KeyRelease-%s>")
         self.game.root.unbind("<Key-P>")
 
     def update(self, delta):
