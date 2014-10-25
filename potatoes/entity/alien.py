@@ -5,11 +5,12 @@ import math
 
 
 class Alien(Entity, Movable, Renderable, Shootable):
-    MOVE_VELOCITY = 80
-    ROTATE_VELOCITY = 0.1
-    ACCEL = 125
+    MOVE_VELOCITY = 80              # TODO: Balance this
+    ROTATE_VELOCITY = 0.1           # TODO: Balance this
+    ACCEL = 125                     # TODO: Balance this
 
-    DIST_FROM_PLAYER = 400
+    SHOOT_INTERVAL = 3              # TODO: Balance this
+    DIST_FROM_PLAYER = 400          # TODO: Balance this
 
     def __init__(self, canvas, player: Entity):
         Entity.__init__(self, 100, 100)
@@ -20,8 +21,9 @@ class Alien(Entity, Movable, Renderable, Shootable):
 
         self._rotating = 0
         self._target = player
+        self._shoot_timer = 0
 
-    def ai_update(self):
+    def ai_update(self, delta, gx):
         target_diff = self._target.pos - self._pos
         if target_diff.magnitude > self.DIST_FROM_PLAYER + 30:
             vel = self.MOVE_VELOCITY
@@ -34,9 +36,14 @@ class Alien(Entity, Movable, Renderable, Shootable):
             direc = target_diff.direction + (math.pi / 2)
         self._moving = Vector(vel, direc, polar=True)
 
+        self._shoot_timer += delta
+        if self._shoot_timer >= self.SHOOT_INTERVAL:
+            self.shoot(self.pos.x, self.pos.y, target_diff.direction, gx)
+            self._shoot_timer = 0
+
     def update(self, delta, gx):
         super().update(delta, gx)
-        self.ai_update()
+        self.ai_update(delta, gx)
         self.rotate(self._rotating)
         self.move(delta)
         self.update_bullets(delta, gx)
