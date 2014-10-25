@@ -1,7 +1,4 @@
 from tkinter import *
-from operator import itemgetter
-import random
-import math
 import time
 
 
@@ -51,7 +48,7 @@ class GameState(State):
         self.cumulative_time = 0 # Holds cumulative time of every update
         self.score = 0
         self.is_ended = False
-        self.game.set_running(True)
+        self.game.running = True
         self.last_time = time.time()
         self.frames = 0
         self.frame_count = 0
@@ -82,7 +79,7 @@ class GameState(State):
                                 font=(Game.FONT, 12),
                                 fill=Game.TEXT_COLOUR,
                                 anchor=NW)
-        if self.game.is_running():
+        if self.game.running:
             pass
             # Resets the canvas to avoid trails.
 
@@ -91,12 +88,12 @@ class GameState(State):
         """ Method to toggle the is_running boolean in the game
         """
         if not self.is_ended:
-            self.canvas.create_text(self.game.get_width() // 2,
-                                    self.game.get_height() // 2,
+            self.canvas.create_text(self.game.width // 2,
+                                    self.game.height // 2,
                                     text="Paused",
                                     font=(Game.FONT, 50),
                                     fill=Game.TEXT_COLOUR)
-            self.game.set_running(not self.game.is_running())
+            self.game.running = not self.game.running
 
     # Specific game-related things
 
@@ -115,10 +112,10 @@ class Game:
     def __init__(self, width, height):
 
         # Initialise variables
-        self.width = width
-        self.height = height
+        self._width = width
+        self._height = height
         self.game_mode = ""
-        self.running = True
+        self._running = True
         self.switch_state = None
         self.user_name = "Gardiner"
         self.state_engine = StateEngine(self)
@@ -130,8 +127,8 @@ class Game:
         self.root.resizable(0, 0)
         self.root.title("Happy Birthday!")
 
-        self.frame = Frame(self.root, width=self.width,
-                           height=self.height, bg=Game.BACKGROUND_COLOUR)
+        self.frame = Frame(self.root, width=self._width,
+                           height=self._height, bg=Game.BACKGROUND_COLOUR)
 
         self.frame.pack()
 
@@ -139,10 +136,10 @@ class Game:
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
 
-        win_x = (screen_width - self.width) // 2
-        win_y = (screen_height - self.height) // 2
+        win_x = (screen_width - self._width) // 2
+        win_y = (screen_height - self._height) // 2
         self.root.geometry("%dx%d+%d+%d" %
-                           (self.width, self.height, win_x, win_y))
+                           (self._width, self._height, win_x, win_y))
         self.state_engine.new_state(GameState(self))
 
         # Get previous high scores, then start game loop
@@ -163,33 +160,41 @@ class Game:
             self.frame.destroy()
 
         self.frame = Frame(self.root,
-                           width=self.width,
-                           height=self.height,
+                           width=self._width,
+                           height=self._height,
                            bg=Game.BACKGROUND_COLOUR)
         self.frame.pack()
 
-    def is_running(self):
-        return self.running
+    @property
+    def running(self):
+        return self._running
 
-    def set_running(self, value):
-        self.running = value
+    @running.setter
+    def running(self, value):
+        self._running = value
 
-    def get_mode(self):
+    @property
+    def mode(self):
         return self.game_mode
 
-    def set_mode(self, value):
+    @mode.setter
+    def mode(self, value):
         self.game_mode = value
 
-    def get_width(self):
-        return self.width
+    @property
+    def width(self):
+        return self._width
 
-    def get_height(self):
-        return self.height
+    @property
+    def height(self):
+        return self._height
 
-    def get_name(self):
+    @property
+    def name(self):
         return self.user_name
 
-    def set_name(self, value):
+    @name.setter
+    def name(self, value):
         self.user_name = value
 
     def exit(self):
