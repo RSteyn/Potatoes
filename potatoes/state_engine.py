@@ -101,6 +101,10 @@ class GameState(State):
                 self._asteroid_spawn_timer = 0
             for asteroid in self.asteroids:
                 asteroid.update(delta, self.canvas)
+                if -20 < asteroid.pos.x > 820:
+                    self.asteroids.remove(asteroid)
+                elif -20 < asteroid.pos.y > 520:
+                    self.asteroids.remove(asteroid)
             self.alien.update(delta, self.canvas)
             # Resets the canvas to avoid trails.
 
