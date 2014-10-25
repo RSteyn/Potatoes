@@ -1,5 +1,5 @@
 from .entity import *
-
+from tkinter import *
 
 class Player(Entity, Movable, Renderable, Shootable):
     UP = -1
@@ -7,29 +7,30 @@ class Player(Entity, Movable, Renderable, Shootable):
     LEFT = -1
     RIGHT = 1
 
-    def __init__(self, bind_to):
+    def __init__(self, canvas):
         Entity.__init__(self)
         Movable.__init__(self)
-        Renderable.__init__(self, 'resources/dean.gif', bind_to)
+        Renderable.__init__(self, self._pos.x, self._pos.y,
+                            'resources/dean.gif', canvas)
         Shootable.__init__(self)
 
         self._vel = 5           # TODO: Balance this
-        bind_to.bind('<KeyPress-Up>',
+        canvas.bind('<KeyPress-Up>',
                      lambda _: self.start_moving_y(self.UP))
-        bind_to.bind('<KeyPress-Down>',
+        canvas.bind('<KeyPress-Down>',
                      lambda _: self.start_moving_y(self.DOWN))
-        bind_to.bind('<KeyPress-Left>',
+        canvas.bind('<KeyPress-Left>',
                      lambda _: self.start_moving_x(self.LEFT))
-        bind_to.bind('<KeyPress-Right>',
+        canvas.bind('<KeyPress-Right>',
                      lambda _: self.start_moving_x(self.RIGHT))
 
-        bind_to.bind('<KeyRelease-Up>',
+        canvas.bind('<KeyRelease-Up>',
                      lambda _: self.stop_moving_y())
-        bind_to.bind('<KeyRelease-Down>',
+        canvas.bind('<KeyRelease-Down>',
                      lambda _: self.stop_moving_y())
-        bind_to.bind('<KeyRelease-Left>',
+        canvas.bind('<KeyRelease-Left>',
                      lambda _: self.stop_moving_x())
-        bind_to.bind('<KeyRelease-Right>',
+        canvas.bind('<KeyRelease-Right>',
                      lambda _: self.stop_moving_x())
 
     def start_moving_x(self, direction=DOWN):
