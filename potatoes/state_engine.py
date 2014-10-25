@@ -210,4 +210,3 @@ class Game:
         self.last_update_time = time_now
         self.state_engine.update(delta)
         self.root.after(self.TICK_TIME, self.game_loop)
-

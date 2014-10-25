@@ -1,8 +1,6 @@
-from potatoes import attributes as attr
-
-__author__ = 'rileysteyn'
+from . import attributes as attr
 
 
 class Player(attr.Movable, attr.Renderable, attr.Shootable):
     def __init__(self):
-        pass
+        super().__init__()
