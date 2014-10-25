@@ -2,9 +2,13 @@ from potatoes.vector import Vector
 
 
 class Movable:
-    def __init__(self, velocity=0, direction=0):
+    FRICTION = 75           # TODO: Balance this
+
+    def __init__(self, velocity=0, direction=0, accel=50):
         self._moving = Vector(velocity, direction, polar=True)
         self._direction = direction
+        self._accel = accel
+        self._c_vel = 0
 
     @property
     def velocity(self):
@@ -29,4 +33,12 @@ class Movable:
             self._direction = self._moving.direction
 
     def move(self, delta):
-        self._pos += self._moving * delta
+        if self._c_vel < self._moving.magnitude:
+            self._c_vel += self._accel * delta
+            moving = Vector(self._c_vel, self._moving.direction, polar=True)
+        elif self._moving.magnitude < self._c_vel:
+            self._c_vel -= self.FRICTION * delta
+            moving = Vector(self._c_vel, self._moving.direction, polar=True)
+        else:
+            moving = self._moving
+        self._pos += moving * delta

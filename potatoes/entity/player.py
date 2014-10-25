@@ -7,15 +7,16 @@ class Player(Entity, Movable, Renderable, Shootable):
     CW = 1
     ACW = -1
 
-    MOVE_VELOCITY = 100           # TODO: Balance this
-    ROTATE_VELOCITY = 0.1
+    MOVE_VELOCITY = 100             # TODO: Balance this
+    ROTATE_VELOCITY = 0.1           # TODO: Balance this
+    ACCEL = 125                     # TODO: Balance this
     DIRECTION_OVAL_DISTANCE = 100
     DIRECTION_OVAL_COLOR = '#ff0000'
     DIRECTION_OVAL_WIDTH = 5
 
     def __init__(self, bind_to, canvas):
         Entity.__init__(self)
-        Movable.__init__(self)
+        Movable.__init__(self, 0, 0, self.ACCEL)
         Renderable.__init__(self, self._pos.x, self._pos.y,
                             'resources/dean.gif', canvas)
         Shootable.__init__(self)
