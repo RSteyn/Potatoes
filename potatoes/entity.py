@@ -27,15 +27,30 @@ class Shootable:
 
 class Movable:
     def __init__(self):
-        self._moving = Vector(0, 0)
+        self._moving = Vector(0, 0, polar=True)
+        self._direction = 0
 
     @property
-    def moving(self):
-        return self._moving
+    def velocity(self):
+        return self._moving.magnitude
 
-    @moving.setter
-    def moving(self, val):
-        self._moving = val
+    @velocity.setter
+    def velocity(self, val):
+        self._moving = Vector(val, self._direction, polar=True)
+
+    @property
+    def direction(self):
+        return self._direction
+
+    @direction.setter
+    def direction(self, val):
+        self._direction = val
+        self._moving = Vector(self._moving.magnitude, val, polar=True)
+
+    def rotate(self, theta):
+        self._moving = self._moving.rotate(theta)
+        if theta != 0:
+            self._direction = self._moving.direction
 
     def move(self):
         self._pos += self._moving

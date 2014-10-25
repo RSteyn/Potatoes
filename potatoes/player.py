@@ -2,50 +2,55 @@ from .entity import *
 
 
 class Player(Entity, Movable, Renderable, Shootable):
-    UP = -1
-    DOWN = 1
-    LEFT = -1
-    RIGHT = 1
+    CW = -1
+    ACW = 1
+
+    MOVE_VELOCITY = 5           # TODO: Balance this
+    ROTATE_VELOCITY = 0.1
 
     def __init__(self, bind_to, canvas):
         Entity.__init__(self)
         Movable.__init__(self)
-        Renderable.__init__(self, self._pos._x, self._pos._y,
+        Renderable.__init__(self, self._pos.x, self._pos.y,
                             'resources/dean.gif', canvas)
         Shootable.__init__(self)
 
-        self._vel = 5           # TODO: Balance this
+        self._rotating = 0
+        self._rotating_cw_ = False
+        self._rotating_acw_ = False
+
         bind_to.bind('<KeyPress-Up>',
-                     lambda _: self.start_moving_y(self.UP))
+                     lambda _: self.start_moving_forward())
         bind_to.bind('<KeyPress-Down>',
-                     lambda _: self.start_moving_y(self.DOWN))
+                     lambda _: None)
         bind_to.bind('<KeyPress-Left>',
-                     lambda _: self.start_moving_x(self.LEFT))
+                     lambda _: self.start_rotating(self.ACW))
         bind_to.bind('<KeyPress-Right>',
-                     lambda _: self.start_moving_x(self.RIGHT))
+                     lambda _: self.start_rotating(self.CW))
 
         bind_to.bind('<KeyRelease-Up>',
-                     lambda _: self.stop_moving_y())
+                     lambda _: self.stop_moving_forward())
         bind_to.bind('<KeyRelease-Down>',
-                     lambda _: self.stop_moving_y())
+                     lambda _: None)
         bind_to.bind('<KeyRelease-Left>',
-                     lambda _: self.stop_moving_x())
+                     lambda _: self.stop_rotating())
         bind_to.bind('<KeyRelease-Right>',
-                     lambda _: self.stop_moving_x())
+                     lambda _: self.stop_rotating())
 
-    def start_moving_x(self, direction):
-        self.moving.x = self._vel * direction
+    def start_moving_forward(self):
+        self.velocity = self.MOVE_VELOCITY
 
-    def stop_moving_x(self):
-        self.moving.x = 0
+    def stop_moving_forward(self):
+        self.velocity = 0
 
-    def start_moving_y(self, direction):
-        self.moving.y = self._vel * direction
+    def start_rotating(self, direction):
+        self._rotating = self.ROTATE_VELOCITY * direction
 
-    def stop_moving_y(self):
-        self.moving.y = 0
+    def stop_rotating(self):
+        self._rotating = 0
 
     def update(self, delta, gx):
         super().update(delta, gx)
+        self.rotate(self._rotating)
         self.move()
-        gx.coords(self.img, (self._pos._x, self._pos._y))
+        gx.coords(self.img, (self._pos.x, self._pos.y))
