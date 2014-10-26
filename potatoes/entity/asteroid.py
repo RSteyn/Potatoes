@@ -16,7 +16,8 @@ class Asteroid(Entity, Movable, Renderable, Killable, Collidable):
     POINT_3 = 3 * EIGHTH
     POINT_4 = 5 * EIGHTH
 
-    def __init__(self, canvas):
+    def __init__(self, state, canvas):
+        # Initialise random direction,velocity
         dir = 2*math.pi * random()
         vel = randrange(self.MIN_VEL, self.MAX_VEL)
         if self.POINT_1 <= dir < self.POINT_2:
@@ -27,6 +28,8 @@ class Asteroid(Entity, Movable, Renderable, Killable, Collidable):
             start_pos = (KILL_RIGHT - 1, randrange(0, GAME_HEIGHT))
         else:
             start_pos = (randrange(0, GAME_WIDTH), KILL_MIN + 1)
+
+        # Initialise attributes
         Entity.__init__(self, *start_pos)
         Movable.__init__(self, velocity=vel, direction=dir, accel=self.ACCEL)
         Renderable.__init__(self, self._pos.x, self._pos.y, 75, 110,
@@ -35,7 +38,18 @@ class Asteroid(Entity, Movable, Renderable, Killable, Collidable):
         Collidable.__init__(self, self.pos.x, self.pos.y,
                             75, 110, canvas)
         Killable.__init__(self, 1)
+
+        self.state = state  # Store reference
     def update(self, delta, gx):
+        # Perform asteroid boundary checks.
+        if self.pos.x + self.width//2 <=0 \
+                or self.pos.x - self.width//2 > GAME_WIDTH:
+            self.state.remove_asteroid(self)
+        if self.pos.y + self.height//2 <=0 \
+                or self.pos.y - self.height//2 > GAME_HEIGHT:
+            self.state.remove_asteroid(self)
+
+        # Move asteroid
         self.move(delta)
         gx.coords(self.img, (self._pos.x, self._pos.y))
         self.bounding_ellipse.update(gx, self.pos)

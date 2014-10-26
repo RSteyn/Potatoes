@@ -68,7 +68,7 @@ class GameState(State):
         # Game-specific, rather than engine-specific variables
         self.score = 0
         self.player = Player(self.game.root, self.canvas)
-        self.asteroids = [Asteroid(self.canvas)]
+        self.asteroids = [Asteroid(self, self.canvas)]
         self._asteroid_spawn_timer = 0
         self.alien = Alien(self.canvas, self.player)
 
@@ -78,7 +78,7 @@ class GameState(State):
         self.game.root.unbind("<Key-P>")
 
     def update(self, delta):
-        self.canvas.delete('FPS_text')
+        self.canvas.delete('debug')  # Reprint all debug text
         super().update(delta)
         self.cumulative_time += delta
         self.frames += 1
@@ -87,16 +87,8 @@ class GameState(State):
             self.cumulative_time -= 1
             self.frame_count = self.frames
             self.frames = 0
-        self.canvas.create_text(20, 20, text='FPS: ' + str(self.frame_count),
-                                font=(Game.FONT, 12),
-                                fill=Game.TEXT_COLOUR,
-                                anchor=NW,
-                                tag='FPS_text')
-        self.canvas.create_text(20, 40, text=self.player._shoot_timer,
-                                font=(Game.FONT, 12),
-                                fill=Game.TEXT_COLOUR,
-                                anchor=NW,
-                                tag='FPS_text')
+
+        # Actual game updates
         if self.game.running:
             self.player.update(delta, self.canvas)
 
@@ -104,20 +96,25 @@ class GameState(State):
             if self._asteroid_spawn_timer >= self.ASTEROID_INTERVAL and \
                     len(self.asteroids) < self.MAX_ASTEROIDS:
                 # Spawn an asteroid
-                self.asteroids.append(Asteroid(self.canvas))
+                self.asteroids.append(Asteroid(self, self.canvas))
                 self._asteroid_spawn_timer = 0
 
-            # Do boundary checking for asteroids
+            # Update asteroids
             for asteroid in self.asteroids:
                 asteroid.update(delta, self.canvas)
-                if asteroid.pos.x + asteroid.width//2 <=0 \
-                        or asteroid.pos.x - asteroid.width//2 > GAME_WIDTH:
-                    self.asteroids.remove(asteroid)
-                if asteroid.pos.y + asteroid.height//2 <=0 \
-                        or asteroid.pos.y - asteroid.height//2 > GAME_HEIGHT:
-                    self.asteroids.remove(asteroid)
             self.alien.update(delta, self.canvas)
 
+    def print_debug(self):
+        self.canvas.create_text(20, 20, text='FPS: ' + str(self.frame_count),
+                                font=(Game.FONT, 12),
+                                fill=Game.TEXT_COLOUR,
+                                anchor=NW,
+                                tag='debug')
+        self.canvas.create_text(20, 40, text=self._asteroid_spawn_timer,
+                                font=(Game.FONT, 12),
+                                fill=Game.TEXT_COLOUR,
+                                anchor=NW,
+                                tag='debug')
     # Miscellaneous
     def pause(self, _):
         """ Method to toggle the is_running boolean in the game
@@ -133,8 +130,9 @@ class GameState(State):
             if self.game.running:
                 self.canvas.delete('pause_text')
 
-    # Specific game-related things
-
+    # Game-specific methods
+    def remove_asteroid(self, asteroid):
+        self.asteroids.remove(asteroid)
 
 class Game:
     # Class variables and methods.
