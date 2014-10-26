@@ -6,7 +6,7 @@ from .entity import Entity
 
 class Bullet(Entity, Movable, Renderable, Killable):
     VELOCITY = 200          # TODO: Balance this
-    ACCEL = 125             # TODO: Balance this
+    ACCEL = 2000            # TODO: Balance this
 
     def __init__(self, shooter, x, y, direction, canvas):
         Entity.__init__(self, x, y)
