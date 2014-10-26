@@ -18,7 +18,7 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         Movable.__init__(self, 0, 0, self.ACCEL)
         Renderable.__init__(self, self._pos.x, self._pos.y, 69, 110,
                             'resources/ruan.gif', canvas)
-        Shootable.__init__(self)
+        Shootable.__init__(self, Alien.SHOOT_INTERVAL)
         Killable.__init__(self, 5)
         # TODO: Set correct ellipse dimensions
         Collidable.__init__(self, self.pos.x, self.pos.y,
@@ -41,16 +41,14 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
             direc = target_diff.direction + (math.pi / 2)
         self._target_velocity = Vector(vel, direc, polar=True)
 
-        self._shoot_timer += delta
-        if self._shoot_timer >= self.SHOOT_INTERVAL:
-            self.shoot(self.pos.x, self.pos.y, target_diff.direction, gx)
-            self._shoot_timer = 0
+        self.shoot(self.pos.x, self.pos.y, target_diff.direction, gx)
 
     def update(self, delta, gx):
         super().update(delta, gx)
+        Shootable.update(self, delta, gx)
         self.ai_update(delta, gx)
         self.rotate(self._rotating, delta)
         self.move(delta)
-        self.update_bullets(delta, gx)
+
         gx.coords(self.img, (self._pos.x, self._pos.y))
         self.bounding_ellipse.update(gx, self.pos)

@@ -16,13 +16,14 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     DIRECTION_OVAL_DISTANCE = 100
     DIRECTION_OVAL_COLOR = '#ff0000'
     DIRECTION_OVAL_WIDTH = 5
+    SHOOT_INTERVAL = 0.5
 
     def __init__(self, bind_to, canvas):
         Entity.__init__(self, 400, 250)
         Movable.__init__(self, 0, 0, self.ACCEL)
         Renderable.__init__(self, self._pos.x, self._pos.y, 80, 110,
                             'resources/gardiner.gif', canvas)
-        Shootable.__init__(self)
+        Shootable.__init__(self, Player.SHOOT_INTERVAL)
         Killable.__init__(self, 1)
         # TODO: Set correct ellipse dimensions
         Collidable.__init__(self, self.pos.x, self.pos.y,
@@ -85,6 +86,7 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
 
     def update(self, delta, gx):
         super().update(delta, gx)
+        Shootable.update(self, delta, gx)
         self.rotate(self._rotating, delta)
         self.move(delta)
         # Do screen wrapping
@@ -102,7 +104,6 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
             # Beyond bottom edge of screen, move to left
             self._pos = Vector(self._pos.x, -self.height//2)
 
-        self.update_bullets(delta, gx)
         self.bounding_ellipse.update(gx, self.pos)
 
         # Move image on canvas

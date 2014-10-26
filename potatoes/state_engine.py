@@ -1,9 +1,8 @@
 import time
 from tkinter import *
-
 from .entity import Player, Asteroid, Alien
+from .values import GAME_WIDTH, GAME_HEIGHT
 from .vector import Vector
-
 
 class StateEngine:
     def __init__(self, game):
@@ -93,20 +92,30 @@ class GameState(State):
                                 fill=Game.TEXT_COLOUR,
                                 anchor=NW,
                                 tag='FPS_text')
+        self.canvas.create_text(20, 40, text=self.player._shoot_timer,
+                                font=(Game.FONT, 12),
+                                fill=Game.TEXT_COLOUR,
+                                anchor=NW,
+                                tag='FPS_text')
         if self.game.running:
             self.player.update(delta, self.canvas)
 
             self._asteroid_spawn_timer += delta
             if self._asteroid_spawn_timer >= self.ASTEROID_INTERVAL and \
                     len(self.asteroids) < self.MAX_ASTEROIDS:
+                # Spawn an asteroid
                 self.asteroids.append(Asteroid(self.canvas))
                 self._asteroid_spawn_timer = 0
-            # for asteroid in self.asteroids:
-            #     asteroid.update(delta, self.canvas)
-            #     if KILL_MIN < asteroid.pos.x > KILL_RIGHT:
-            #         self.asteroids.remove(asteroid)
-            #     elif KILL_MIN < asteroid.pos.y > KILL_BOT:
-            #         self.asteroids.remove(asteroid)
+
+            # Do boundary checking for asteroids
+            for asteroid in self.asteroids:
+                asteroid.update(delta, self.canvas)
+                if asteroid.pos.x + asteroid.width//2 <=0 \
+                        or asteroid.pos.x - asteroid.width//2 > GAME_WIDTH:
+                    self.asteroids.remove(asteroid)
+                if asteroid.pos.y + asteroid.height//2 <=0 \
+                        or asteroid.pos.y - asteroid.height//2 > GAME_HEIGHT:
+                    self.asteroids.remove(asteroid)
             self.alien.update(delta, self.canvas)
 
     # Miscellaneous
