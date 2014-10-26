@@ -1,10 +1,11 @@
 from .entity import Entity
 from ..attributes import Movable, Renderable, Shootable, Killable
+from ..attributes.collidable import Collidable
 from ..vector import Vector
 import math
 
 
-class Player(Entity, Movable, Renderable, Shootable, Killable):
+class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     CW = 1
     ACW = -1
 
@@ -18,10 +19,13 @@ class Player(Entity, Movable, Renderable, Shootable, Killable):
     def __init__(self, bind_to, canvas):
         Entity.__init__(self, 400, 250)
         Movable.__init__(self, 0, 0, self.ACCEL)
-        Renderable.__init__(self, self._pos.x, self._pos.y,
+        Renderable.__init__(self, self._pos.x, self._pos.y, 110, 143,
                             'resources/dean.gif', canvas)
         Shootable.__init__(self)
         Killable.__init__(self, 1)
+        # TODO: Set correct ellipse dimensions
+        Collidable.__init__(self, self.pos.x, self.pos.y,
+                            110, 143, canvas)
 
         self._rotating = 0
 
@@ -84,6 +88,11 @@ class Player(Entity, Movable, Renderable, Shootable, Killable):
         self.rotate(self._rotating, delta)
         self.move(delta)
         self.update_bullets(delta, gx)
+        self.bounding_ellipse.update(self.pos, gx)
+
+        # Move image on canvas
         gx.coords(self.img, (self._pos.x, self._pos.y))
+
+        # Move directional pointer on canvas
         new_oval_loc = self._direction_oval_loc_()
         gx.coords(self._oval, self._oval_bbox_(new_oval_loc))

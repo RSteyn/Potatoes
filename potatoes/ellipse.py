@@ -11,7 +11,7 @@ class Circle:
         self.pos = Vector(x, y)
         self.rad = radius
 
-    def draw(self, gx):
+    def update(self, pos, gx):
         gx.create_oval(self.pos.x-self.rad, self.pos.y-self.rad,
                        self.pos.x+self.rad, self.pos.y+self.rad,
                        outline='red')
@@ -38,7 +38,8 @@ class Ellipse(Circle):
 
     def __init__(self, x, y,
                  half_width,
-                 half_height
+                 half_height,
+                 gx
                  ):
         """
         This whole thing assumes that the ellipse is taller than it
@@ -75,16 +76,28 @@ class Ellipse(Circle):
             self.circles.append(Circle(self.x, self.y-half_focus, rad))
             self.circles.append(Circle(self.x, self.y+half_focus, rad))
 
+        # Create draw ellipse:
+        self.ellipse = gx.create_oval(
+            self.pos.x-self.width // 2,
+            self.pos.y-self.height // 2,
+            self.pos.x+self.width // 2,
+            self.pos.y+self.height // 2,
+            outline='yellow'
+        )
+
     def get_x(self, y):
         return self.half_width * math.sqrt(
             1 - (((y-self.pos.y)/self.half_height)**2))
 
-    def draw(self, gx):
-        gx.create_oval(self.pos.x-self.width // 2, self.pos.y-self.height // 2,
-                       self.pos.x+self.width // 2, self.pos.y+self.height // 2,
-                       outline='blue')
-        for circle in self.circles:
-            circle.draw(gx)
+    def update(self, pos, gx):
+        self.pos = pos
+        gx.coords(self.ellipse, (
+            self.pos.x-self.half_width, self.pos.y-self.half_height,
+            self.pos.x+self.half_width, self.pos.y+self.half_height)
+        )
+        # For debugging:
+        # for circle in self.circles:
+        #     circle.update(gx)
 
 # Testing code
 # from tkinter import *
@@ -92,8 +105,8 @@ class Ellipse(Circle):
 # c = Canvas(root, width=500, height=500, bg='black')
 # e1 = Ellipse(200, 200, 95, 100)
 # e2 = Ellipse(360, 290, 50, 100)
-# e1.draw(c)
-# e2.draw(c)
+# e1.update(c)
+# e2.update(c)
 # print(Ellipse.collision(e1, e2))
 #
 # c.pack()

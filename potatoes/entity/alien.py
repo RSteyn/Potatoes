@@ -1,10 +1,11 @@
 from . import Entity
 from ..attributes import Movable, Renderable, Shootable, Killable
+from ..attributes.collidable import Collidable
 from ..vector import Vector
 import math
 
 
-class Alien(Entity, Movable, Renderable, Shootable, Killable):
+class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     MOVE_VELOCITY = 80              # TODO: Balance this
     ROTATE_VELOCITY = 0.1           # TODO: Balance this
     ACCEL = 125                     # TODO: Balance this
@@ -15,18 +16,21 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable):
     def __init__(self, canvas, player: Entity):
         Entity.__init__(self, 100, 100)
         Movable.__init__(self, 0, 0, self.ACCEL)
-        Renderable.__init__(self, self._pos.x, self._pos.y,
+        Renderable.__init__(self, self._pos.x, self._pos.y, 110, 143,
                             'resources/dean.gif', canvas)
         Shootable.__init__(self)
         Killable.__init__(self, 5)
-
+        # TODO: Set correct ellipse dimensions
+        Collidable.__init__(self, self.pos.x, self.pos.y,
+                            80, 100, canvas)
         self._rotating = 0
         self._target = player
         self._shoot_timer = 0
 
     def ai_update(self, delta, gx):
         target_diff = self._target.pos - self._pos
-        if target_diff.magnitude > self.DIST_FROM_PLAYER + 30:  # TODO: remove magic number?
+        # TODO: remove magic number?
+        if target_diff.magnitude > self.DIST_FROM_PLAYER + 30:
             vel = self.MOVE_VELOCITY
             direc = target_diff.direction
         elif target_diff.magnitude > self.DIST_FROM_PLAYER - 30:
@@ -49,3 +53,4 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable):
         self.move(delta)
         self.update_bullets(delta, gx)
         gx.coords(self.img, (self._pos.x, self._pos.y))
+        self.bounding_ellipse.update(self.pos, gx)

@@ -1,10 +1,11 @@
 from ..attributes import Movable, Renderable, Killable
+from ..attributes.collidable import Collidable
 from .entity import Entity
 from ..values import GAME_WIDTH, GAME_HEIGHT, KILL_MIN, KILL_RIGHT, KILL_BOT
 from random import random, randrange
 import math
 
-class Asteroid(Entity, Movable, Renderable, Killable):
+class Asteroid(Entity, Movable, Renderable, Killable, Collidable):
     MAX_VEL = 50    # TODO: Balance this
     MIN_VEL = 20    # TODO: Balance this
     ACCEL = 125     # TODO: Balance this
@@ -28,9 +29,13 @@ class Asteroid(Entity, Movable, Renderable, Killable):
             start_pos = (randrange(0, GAME_WIDTH), KILL_MIN + 1)
         Entity.__init__(self, *start_pos)
         Movable.__init__(self, velocity=vel, direction=dir, accel=self.ACCEL)
-        Renderable.__init__(self, self._pos.x, self._pos.y,
+        Renderable.__init__(self, self._pos.x, self._pos.y, 61, 44,
                             'resources/potato_chip.gif', canvas)
+        # TODO: Set correct ellipse dimensions
+        Collidable.__init__(self, self.pos.x, self.pos.y,
+                    120, 120, canvas)
         Killable.__init__(self, 1)
     def update(self, delta, gx):
         self.move(delta)
         gx.coords(self.img, (self._pos.x, self._pos.y))
+        self.bounding_ellipse.update(self.pos, gx)
