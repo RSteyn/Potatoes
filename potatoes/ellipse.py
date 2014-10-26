@@ -107,15 +107,15 @@ class Ellipse(Circle):
             circle.update(gx)
 
 # Testing code
-from tkinter import *
-root = Tk()
-c = Canvas(root, width=500, height=500, bg='black')
-e1 = Ellipse(200, 200, 93, 100, c)
-e2 = Ellipse(360, 290, 50, 100, c)
-e1.update(c)
-e2.update(c)
-print(e1.eccentricity)
-print(Ellipse.collision(e1, e2))
-
-c.pack()
-root.mainloop()
+# from tkinter import *
+# root = Tk()
+# c = Canvas(root, width=500, height=500, bg='black')
+# e1 = Ellipse(200, 200, 93, 100, c)
+# e2 = Ellipse(360, 290, 50, 100, c)
+# e1.update(c)
+# e2.update(c)
+# print(e1.eccentricity)
+# print(Ellipse.collision(e1, e2))
+#
+# c.pack()
+# root.mainloop()
