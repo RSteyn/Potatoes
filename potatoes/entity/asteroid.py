@@ -26,7 +26,6 @@ class Asteroid(Entity, Movable, Renderable, Killable):
             start_pos = (KILL_RIGHT - 1, randrange(0, GAME_HEIGHT))
         else:
             start_pos = (randrange(0, GAME_WIDTH), KILL_MIN + 1)
-        print(dir, start_pos)
         Entity.__init__(self, *start_pos)
         Movable.__init__(self, velocity=vel, direction=dir, accel=self.ACCEL)
         Renderable.__init__(self, self._pos.x, self._pos.y,
