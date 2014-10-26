@@ -103,8 +103,8 @@ class Ellipse(Circle):
             self.pos.x+self.half_width, self.pos.y+self.half_height)
         )
         # For debugging:
-        for circle in self.circles:
-            circle.update(gx)
+        # for circle in self.circles:
+        #     circle.update(gx)
 
 # Testing code
 # from tkinter import *
