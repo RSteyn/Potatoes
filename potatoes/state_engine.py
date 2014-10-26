@@ -3,6 +3,7 @@ from tkinter import *
 
 from .entity import Player, Asteroid, Alien
 from .values import KILL_MIN, KILL_BOT, KILL_RIGHT
+from .vector import Vector
 
 
 class StateEngine:
@@ -95,6 +96,15 @@ class GameState(State):
                                 tag='FPS_text')
         if self.game.running:
             self.player.update(delta, self.canvas)
+            if self.player.pos.x < KILL_MIN:
+                self.player._pos = Vector(KILL_RIGHT - 1, self.player.pos.y)
+            elif self.player.pos.x > KILL_RIGHT:
+                self.player._pos = Vector(KILL_MIN + 1, self.player.pos.y)
+            elif self.player.pos.y < KILL_MIN:
+                self.player._pos = Vector(self.player.pos.x, KILL_BOT - 1)
+            elif self.player.pos.y > KILL_BOT:
+                self.player._pos = Vector(self.player.pos.x, KILL_MIN + 1)
+
             self._asteroid_spawn_timer += delta
             if self._asteroid_spawn_timer >= self.ASTEROID_INTERVAL and \
                     len(self.asteroids) < self.MAX_ASTEROIDS:
