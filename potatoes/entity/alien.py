@@ -16,13 +16,13 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     def __init__(self, canvas, player: Entity):
         Entity.__init__(self, 100, 100)
         Movable.__init__(self, 0, 0, self.ACCEL)
-        Renderable.__init__(self, self._pos.x, self._pos.y, 110, 143,
-                            'resources/dean.gif', canvas)
+        Renderable.__init__(self, self._pos.x, self._pos.y, 69, 110,
+                            'resources/ruan.gif', canvas)
         Shootable.__init__(self)
         Killable.__init__(self, 5)
         # TODO: Set correct ellipse dimensions
         Collidable.__init__(self, self.pos.x, self.pos.y,
-                            80, 100, canvas)
+                            69, 110, canvas)
         self._rotating = 0
         self._target = player
         self._shoot_timer = 0
