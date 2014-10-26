@@ -2,6 +2,7 @@ from .entity import Entity
 from ..attributes import Movable, Renderable, Shootable, Killable
 from ..attributes.collidable import Collidable
 from ..vector import Vector
+from ..values import GAME_WIDTH, GAME_HEIGHT
 import math
 
 
@@ -26,7 +27,6 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         # TODO: Set correct ellipse dimensions
         Collidable.__init__(self, self.pos.x, self.pos.y,
                             110, 143, canvas)
-
         self._rotating = 0
 
         # Movement event bindings
@@ -87,6 +87,21 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         super().update(delta, gx)
         self.rotate(self._rotating, delta)
         self.move(delta)
+        # Do screen wrapping
+        if self.pos.x + self.width//2 < 0:
+            # Beyond left edge of screen, move to right
+            self._pos = Vector(GAME_WIDTH + self.width//2, self._pos.y)
+        elif self.pos.x - self.width//2 > GAME_WIDTH:
+            # Beyond right edge of screen, move to left
+            self._pos = Vector(-self.width//2, self._pos.y)
+
+        if self.pos.y + self.height//2 < 0:
+            # Beyond top edge of screen, move to bottom
+            self._pos = Vector(self._pos.x, GAME_HEIGHT + self.height//2)
+        elif self.pos.y - self.height//2 > GAME_HEIGHT:
+            # Beyond bottom edge of screen, move to left
+            self._pos = Vector(self._pos.x, -self.height//2)
+
         self.update_bullets(delta, gx)
         self.bounding_ellipse.update(gx, self.pos)
 

@@ -2,7 +2,6 @@ import time
 from tkinter import *
 
 from .entity import Player, Asteroid, Alien
-from .values import KILL_MIN, KILL_BOT, KILL_RIGHT
 from .vector import Vector
 
 
@@ -96,28 +95,19 @@ class GameState(State):
                                 tag='FPS_text')
         if self.game.running:
             self.player.update(delta, self.canvas)
-            if self.player.pos.x < KILL_MIN:
-                self.player._pos = Vector(KILL_RIGHT - 1, self.player.pos.y)
-            elif self.player.pos.x > KILL_RIGHT:
-                self.player._pos = Vector(KILL_MIN + 1, self.player.pos.y)
-            elif self.player.pos.y < KILL_MIN:
-                self.player._pos = Vector(self.player.pos.x, KILL_BOT - 1)
-            elif self.player.pos.y > KILL_BOT:
-                self.player._pos = Vector(self.player.pos.x, KILL_MIN + 1)
 
             self._asteroid_spawn_timer += delta
             if self._asteroid_spawn_timer >= self.ASTEROID_INTERVAL and \
                     len(self.asteroids) < self.MAX_ASTEROIDS:
                 self.asteroids.append(Asteroid(self.canvas))
                 self._asteroid_spawn_timer = 0
-            for asteroid in self.asteroids:
-                asteroid.update(delta, self.canvas)
-                if KILL_MIN < asteroid.pos.x > KILL_RIGHT:
-                    self.asteroids.remove(asteroid)
-                elif KILL_MIN < asteroid.pos.y > KILL_BOT:
-                    self.asteroids.remove(asteroid)
+            # for asteroid in self.asteroids:
+            #     asteroid.update(delta, self.canvas)
+            #     if KILL_MIN < asteroid.pos.x > KILL_RIGHT:
+            #         self.asteroids.remove(asteroid)
+            #     elif KILL_MIN < asteroid.pos.y > KILL_BOT:
+            #         self.asteroids.remove(asteroid)
             self.alien.update(delta, self.canvas)
-            # Resets the canvas to avoid trails.
 
     # Miscellaneous
     def pause(self, _):
