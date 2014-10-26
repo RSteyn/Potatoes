@@ -62,10 +62,10 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         )
 
     def start_moving_forward(self):
-        self.velocity = self.MOVE_VELOCITY
+        self.speed = self.MOVE_VELOCITY
 
     def stop_moving_forward(self):
-        self.velocity = 0
+        self.speed = 0
 
     def start_rotating(self, direction):
         self._rotating = self.ROTATE_VELOCITY * direction

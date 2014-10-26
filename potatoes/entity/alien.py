@@ -39,7 +39,7 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         else:
             vel = -self.MOVE_VELOCITY
             direc = target_diff.direction + (math.pi / 2)
-        self._moving = Vector(vel, direc, polar=True)
+        self._target_velocity = Vector(vel, direc, polar=True)
 
         self._shoot_timer += delta
         if self._shoot_timer >= self.SHOOT_INTERVAL:
