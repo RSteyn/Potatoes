@@ -14,9 +14,9 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     DIST_FROM_PLAYER = 400          # TODO: Balance this
 
     def __init__(self, canvas, player: Entity):
-        Entity.__init__(self, 100, 100)
+        Entity.__init__(self, Vector(100, 100))
         Movable.__init__(self, 0, 0, self.ACCEL)
-        Renderable.__init__(self, self._pos.x, self._pos.y, 69, 110,
+        Renderable.__init__(self, self.pos, 69, 110,
                             'resources/ruan.gif', canvas)
         Shootable.__init__(self, Alien.SHOOT_INTERVAL)
         Killable.__init__(self, 5)
@@ -41,7 +41,7 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
             direc = target_diff.direction + (math.pi / 2)
         self._target_velocity = Vector(vel, direc, polar=True)
 
-        self.shoot(self.pos.x, self.pos.y, target_diff.direction, gx)
+        self.shoot(self.pos, target_diff.direction, gx)
 
     def update(self, delta, gx):
         super().update(delta, gx)

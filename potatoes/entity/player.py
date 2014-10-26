@@ -19,9 +19,9 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     SHOOT_INTERVAL = 0.5
 
     def __init__(self, bind_to, canvas):
-        Entity.__init__(self, 400, 250)
+        Entity.__init__(self, Vector(GAME_WIDTH//2, GAME_HEIGHT//2))
         Movable.__init__(self, 0, 0, self.ACCEL)
-        Renderable.__init__(self, self._pos.x, self._pos.y, 80, 110,
+        Renderable.__init__(self, self.pos, 80, 110,
                             'resources/gardiner.gif', canvas)
         Shootable.__init__(self, Player.SHOOT_INTERVAL)
         Killable.__init__(self, 1)
@@ -51,8 +51,7 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
 
         # Bind shooting
         bind_to.bind('<space>',
-                     lambda _: self.shoot(self._pos.x,
-                                          self._pos.y,
+                     lambda _: self.shoot(self.pos,
                                           self.direction,
                                           canvas))
 

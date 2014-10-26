@@ -1,6 +1,7 @@
 from ..attributes import Movable, Renderable, Killable
 from ..attributes.collidable import Collidable
 from .entity import Entity
+from ..vector import Vector
 from ..values import GAME_WIDTH, GAME_HEIGHT, KILL_MIN, KILL_RIGHT, KILL_BOT
 from random import random, randrange
 import math
@@ -21,18 +22,19 @@ class Asteroid(Entity, Movable, Renderable, Killable, Collidable):
         dir = 2*math.pi * random()
         vel = randrange(self.MIN_VEL, self.MAX_VEL)
         if self.POINT_1 <= dir < self.POINT_2:
-            start_pos = (KILL_MIN + 1, randrange(0, GAME_HEIGHT))
+            start_pos = Vector(KILL_MIN + 1, randrange(0, GAME_HEIGHT))
         elif self.POINT_2 <= dir < self.POINT_3:
-            start_pos = (randrange(0, GAME_WIDTH), KILL_BOT - 1)
+            start_pos = Vector(randrange(0, GAME_WIDTH), KILL_BOT - 1)
         elif self.POINT_3 <= dir < self.POINT_4:
-            start_pos = (KILL_RIGHT - 1, randrange(0, GAME_HEIGHT))
+            start_pos = Vector(KILL_RIGHT - 1, randrange(0, GAME_HEIGHT))
         else:
-            start_pos = (randrange(0, GAME_WIDTH), KILL_MIN + 1)
+            start_pos = Vector(randrange(0, GAME_WIDTH), KILL_MIN + 1)
+        start_pos = Vector(300, 300)
 
         # Initialise attributes
-        Entity.__init__(self, *start_pos)
+        Entity.__init__(self, start_pos)
         Movable.__init__(self, velocity=vel, direction=dir, accel=self.ACCEL)
-        Renderable.__init__(self, self._pos.x, self._pos.y, 75, 110,
+        Renderable.__init__(self, self.pos, 75, 110,
                             'resources/riley.gif', canvas)
         # TODO: Set correct ellipse dimensions
         Collidable.__init__(self, self.pos.x, self.pos.y,

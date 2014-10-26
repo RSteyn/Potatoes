@@ -4,9 +4,9 @@ __author__ = 'rileysteyn'
 
 
 class Renderable:
-    def __init__(self, x, y, img_width, img_height, img_path, canvas):
+    def __init__(self, pos, img_width, img_height, img_path, canvas):
         self.pi = PhotoImage(file=img_path)
-        self._img = canvas.create_image(x, y, image=self.pi)
+        self._img = canvas.create_image(pos.x, pos.y, image=self.pi)
         self._width = img_width
         self._height = img_height
 

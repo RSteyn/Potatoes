@@ -6,9 +6,15 @@ class Shootable:
         self.interval = interval
         self._shoot_timer = 0
 
-    def shoot(self, x, y, direction, canvas):
+    def shoot(self, pos, direction, canvas):
+        """
+        Shoots a bullet
+        :param pos: Initial position of bullet
+        :param direction: Direction in which bullet moves
+        :param canvas: The game canvas
+        """
         if self._shoot_timer >= self.interval:
-            self.bullets.append(Bullet(self, x, y, direction, canvas))
+            self.bullets.append(Bullet(self, pos, direction, canvas))
             self._shoot_timer = 0
 
     def _update_bullets(self, delta, gx):

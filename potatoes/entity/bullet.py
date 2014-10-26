@@ -10,10 +10,10 @@ class Bullet(Entity, Movable, Renderable, Killable, Collidable):
     VELOCITY = 200          # TODO: Balance this
     ACCEL = 2000            # TODO: Balance this
 
-    def __init__(self, shooter, x, y, direction, canvas):
-        Entity.__init__(self, x, y)
+    def __init__(self, shooter, pos, direction, canvas):
+        Entity.__init__(self, pos)
         Movable.__init__(self, self.VELOCITY, direction, self.ACCEL)
-        Renderable.__init__(self, self._pos.x, self._pos.y, 22, 35,
+        Renderable.__init__(self, self.pos, 22, 35,
                             'resources/cutter.gif', canvas)
         Killable.__init__(self, 1)
          # TODO: Set correct ellipse dimensions
