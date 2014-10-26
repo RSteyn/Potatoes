@@ -29,11 +29,11 @@ class Asteroid(Entity, Movable, Renderable, Killable, Collidable):
             start_pos = (randrange(0, GAME_WIDTH), KILL_MIN + 1)
         Entity.__init__(self, *start_pos)
         Movable.__init__(self, velocity=vel, direction=dir, accel=self.ACCEL)
-        Renderable.__init__(self, self._pos.x, self._pos.y, 61, 44,
-                            'resources/potato_chip.gif', canvas)
+        Renderable.__init__(self, self._pos.x, self._pos.y, 75, 110,
+                            'resources/riley.gif', canvas)
         # TODO: Set correct ellipse dimensions
         Collidable.__init__(self, self.pos.x, self.pos.y,
-                    120, 120, canvas)
+                            75, 110, canvas)
         Killable.__init__(self, 1)
     def update(self, delta, gx):
         self.move(delta)

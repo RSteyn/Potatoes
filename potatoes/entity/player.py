@@ -19,13 +19,13 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     def __init__(self, bind_to, canvas):
         Entity.__init__(self, 400, 250)
         Movable.__init__(self, 0, 0, self.ACCEL)
-        Renderable.__init__(self, self._pos.x, self._pos.y, 110, 143,
-                            'resources/dean.gif', canvas)
+        Renderable.__init__(self, self._pos.x, self._pos.y, 80, 110,
+                            'resources/gardiner.gif', canvas)
         Shootable.__init__(self)
         Killable.__init__(self, 1)
         # TODO: Set correct ellipse dimensions
         Collidable.__init__(self, self.pos.x, self.pos.y,
-                            110, 143, canvas)
+                            80, 110, canvas)
 
         self._rotating = 0
 
