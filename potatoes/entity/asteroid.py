@@ -38,4 +38,4 @@ class Asteroid(Entity, Movable, Renderable, Killable, Collidable):
     def update(self, delta, gx):
         self.move(delta)
         gx.coords(self.img, (self._pos.x, self._pos.y))
-        self.bounding_ellipse.update(self.pos, gx)
+        self.bounding_ellipse.update(gx, self.pos)

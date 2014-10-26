@@ -88,7 +88,7 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         self.rotate(self._rotating, delta)
         self.move(delta)
         self.update_bullets(delta, gx)
-        self.bounding_ellipse.update(self.pos, gx)
+        self.bounding_ellipse.update(gx, self.pos)
 
         # Move image on canvas
         gx.coords(self.img, (self._pos.x, self._pos.y))

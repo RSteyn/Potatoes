@@ -11,17 +11,21 @@ class Circle:
         self.pos = Vector(x, y)
         self.rad = radius
 
-    def update(self, pos, gx):
+    def update(self, gx, pos=None):
+        if pos is not None:
+            self.pos = pos
         gx.create_oval(self.pos.x-self.rad, self.pos.y-self.rad,
                        self.pos.x+self.rad, self.pos.y+self.rad,
                        outline='red')
 
 class Ellipse(Circle):
+    PRETTY_MUCH_CIRCULAR_CUTOFF = 0.28
     ECCENTRICITY_CUTOFF = 0.45
     """
     The maths was just too hard, so now all ellipses are
-    approximated using 5 circles, as I assumed that we
-    were not going to use ellipses that are too stretched out.
+    approximated using up to 5 circles, depending on eccentricity,
+    as I assumed that we were not going to use ellipses that are
+    too stretched out.
     """
     @staticmethod
     def collision(e1, e2):
@@ -65,8 +69,10 @@ class Ellipse(Circle):
         self.circles = list()
         # Create default three circles
         self.circles.append(Circle(self.x, self.y, half_width))
-        self.circles.append(Circle(self.x, self.y-focus, half_height-focus))
-        self.circles.append(Circle(self.x, self.y+focus, half_height-focus))
+
+        if self.eccentricity > Ellipse.PRETTY_MUCH_CIRCULAR_CUTOFF:
+            self.circles.append(Circle(self.x, self.y-focus, half_height-focus))
+            self.circles.append(Circle(self.x, self.y+focus, half_height-focus))
 
         if self.eccentricity > Ellipse.ECCENTRICITY_CUTOFF:
             # Use two additional circles to compensate for additional
@@ -89,25 +95,27 @@ class Ellipse(Circle):
         return self.half_width * math.sqrt(
             1 - (((y-self.pos.y)/self.half_height)**2))
 
-    def update(self, pos, gx):
-        self.pos = pos
+    def update(self, gx, pos=None):
+        if pos is not None:
+            self.pos = pos
         gx.coords(self.ellipse, (
             self.pos.x-self.half_width, self.pos.y-self.half_height,
             self.pos.x+self.half_width, self.pos.y+self.half_height)
         )
         # For debugging:
-        # for circle in self.circles:
-        #     circle.update(gx)
+        for circle in self.circles:
+            circle.update(gx)
 
 # Testing code
-# from tkinter import *
-# root = Tk()
-# c = Canvas(root, width=500, height=500, bg='black')
-# e1 = Ellipse(200, 200, 95, 100)
-# e2 = Ellipse(360, 290, 50, 100)
-# e1.update(c)
-# e2.update(c)
-# print(Ellipse.collision(e1, e2))
-#
-# c.pack()
-# root.mainloop()
+from tkinter import *
+root = Tk()
+c = Canvas(root, width=500, height=500, bg='black')
+e1 = Ellipse(200, 200, 93, 100, c)
+e2 = Ellipse(360, 290, 50, 100, c)
+e1.update(c)
+e2.update(c)
+print(e1.eccentricity)
+print(Ellipse.collision(e1, e2))
+
+c.pack()
+root.mainloop()

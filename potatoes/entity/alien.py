@@ -53,4 +53,4 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         self.move(delta)
         self.update_bullets(delta, gx)
         gx.coords(self.img, (self._pos.x, self._pos.y))
-        self.bounding_ellipse.update(self.pos, gx)
+        self.bounding_ellipse.update(gx, self.pos)
