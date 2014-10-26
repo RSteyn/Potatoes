@@ -199,34 +199,28 @@ class Game:
                            bg=Game.BACKGROUND_COLOUR)
         self.frame.pack()
 
+    # Property methods
     @property
     def running(self):
         return self._running
-
     @running.setter
     def running(self, value):
         self._running = value
-
     @property
     def mode(self):
         return self.game_mode
-
     @mode.setter
     def mode(self, value):
         self.game_mode = value
-
     @property
     def width(self):
         return self._width
-
     @property
     def height(self):
         return self._height
-
     @property
     def name(self):
         return self.user_name
-
     @name.setter
     def name(self, value):
         self.user_name = value

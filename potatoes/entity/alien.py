@@ -26,7 +26,7 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable):
 
     def ai_update(self, delta, gx):
         target_diff = self._target.pos - self._pos
-        if target_diff.magnitude > self.DIST_FROM_PLAYER + 30:
+        if target_diff.magnitude > self.DIST_FROM_PLAYER + 30:  # TODO: remove magic number?
             vel = self.MOVE_VELOCITY
             direc = target_diff.direction
         elif target_diff.magnitude > self.DIST_FROM_PLAYER - 30:

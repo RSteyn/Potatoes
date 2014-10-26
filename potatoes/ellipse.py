@@ -1,31 +1,100 @@
-__author__ = 'rileysteyn'
+from potatoes.vector import Vector
+import math
 
-class Ellipse:
+class Circle:
+    @staticmethod
+    def collision(circle1, circle2):
+        diff = circle1.pos - circle2.pos
+        return diff.magnitude <= circle1.rad + circle2.rad
+
+    def __init__(self, x, y, radius):
+        self.pos = Vector(x, y)
+        self.rad = radius
+
+    def draw(self, gx):
+        gx.create_oval(self.pos.x-self.rad, self.pos.y-self.rad,
+                       self.pos.x+self.rad, self.pos.y+self.rad,
+                       outline='red')
+
+class Ellipse(Circle):
+    ECCENTRICITY_CUTOFF = 0.45
+    """
+    The maths was just too hard, so now all ellipses are
+    approximated using 5 circles, as I assumed that we
+    were not going to use ellipses that are too stretched out.
+    """
+    @staticmethod
+    def collision(e1, e2):
+        # Perform bounding box checking first to optimise
+        if (abs(e1.y - e2.y) > e1.half_height + e2.half_height or
+                abs(e1.x - e2.x) > e1.half_width + e2.half_width):
+            return False
+        # Check each ellipses' circle with each other, 9 checks total
+        for circle1 in e1.circles:
+            for circle2 in e2.circles:
+                if Circle.collision(circle1, circle2):
+                    return True
+        return False
+
     def __init__(self, x, y,
                  half_width,
                  half_height
                  ):
         """
-
+        This whole thing assumes that the ellipse is taller than it
+        is wide, as with faces or whatnot.
         :param x: position along x-axis
         :param y: position along y-axis
-        :param half_horizontal_distance: half the horizontal width of
+        :param half_width: half the horizontal width of
         the ellipse, related to semi-axes
-        :param half_vertical_distance: half the vertical length of
+        :param half_height: half the vertical length of
         the ellipse, related to semi-axes
         """
+        Circle.__init__(self, x, y, half_width)
         self.x = x
         self.y = y
 
-        self.a = half_width
-        self.b = half_height
+        self.half_width = half_width
+        self.half_height = half_height
         self.width = half_width * 2
         self.height = half_height * 2
+        focus = math.sqrt(self.half_height**2 - self.half_width**2)
+        self.eccentricity = (focus / math.sqrt(half_height**2 + half_width**2))
 
-    def point_in_ellise(self, vector):
-        to_check = (((vector.x - self.x)**2 / self.a**2) +
-                    ((vector.y - self.y)**2 / self.b**2))
-        if to_check <= 1:
-            return True
-        else:
-            return False
+        self.circles = list()
+        # Create default three circles
+        self.circles.append(Circle(self.x, self.y, half_width))
+        self.circles.append(Circle(self.x, self.y-focus, half_height-focus))
+        self.circles.append(Circle(self.x, self.y+focus, half_height-focus))
+
+        if self.eccentricity > Ellipse.ECCENTRICITY_CUTOFF:
+            # Use two additional circles to compensate for additional
+            # eccentricity
+            half_focus = focus // 2
+            rad = min(half_height-half_focus, self.get_x(self.y-half_focus))
+            self.circles.append(Circle(self.x, self.y-half_focus, rad))
+            self.circles.append(Circle(self.x, self.y+half_focus, rad))
+
+    def get_x(self, y):
+        return self.half_width * math.sqrt(
+            1 - (((y-self.pos.y)/self.half_height)**2))
+
+    def draw(self, gx):
+        gx.create_oval(self.pos.x-self.width // 2, self.pos.y-self.height // 2,
+                       self.pos.x+self.width // 2, self.pos.y+self.height // 2,
+                       outline='blue')
+        for circle in self.circles:
+            circle.draw(gx)
+
+# Testing code
+# from tkinter import *
+# root = Tk()
+# c = Canvas(root, width=500, height=500, bg='black')
+# e1 = Ellipse(200, 200, 95, 100)
+# e2 = Ellipse(360, 290, 50, 100)
+# e1.draw(c)
+# e2.draw(c)
+# print(Ellipse.collision(e1, e2))
+#
+# c.pack()
+# root.mainloop()
