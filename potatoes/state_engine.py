@@ -2,7 +2,7 @@ import time
 from tkinter import *
 
 from .entity import Player, Asteroid, Alien
-from .values import GAME_WIDTH, GAME_HEIGHT
+from .values import KILL_MIN, KILL_BOT, KILL_RIGHT
 
 
 class StateEngine:
@@ -46,13 +46,8 @@ class State:
 
 
 class GameState(State):
-    MAX_ASTEROIDS = 5
-    ASTEROID_INTERVAL = 5
-
-    KILL_MARGIN = 20
-    KILL_MIN = -KILL_MARGIN
-    KILL_RIGHT = GAME_WIDTH + KILL_MARGIN
-    KILL_BOT = GAME_HEIGHT + KILL_MARGIN
+    MAX_ASTEROIDS = 7
+    ASTEROID_INTERVAL = 1
 
     def __init__(self, game):
         super().__init__(game)
@@ -107,9 +102,9 @@ class GameState(State):
                 self._asteroid_spawn_timer = 0
             for asteroid in self.asteroids:
                 asteroid.update(delta, self.canvas)
-                if self.KILL_MIN < asteroid.pos.x > self.KILL_RIGHT:
+                if KILL_MIN < asteroid.pos.x > KILL_RIGHT:
                     self.asteroids.remove(asteroid)
-                elif self.KILL_MIN < asteroid.pos.y > self.KILL_BOT:
+                elif KILL_MIN < asteroid.pos.y > KILL_BOT:
                     self.asteroids.remove(asteroid)
             self.alien.update(delta, self.canvas)
             # Resets the canvas to avoid trails.
