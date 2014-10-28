@@ -7,12 +7,10 @@ import math
 
 
 class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
-    CW = 1
-    ACW = -1
-
-    MOVE_VELOCITY = 100             # TODO: Balance this
-    ROTATE_VELOCITY = math.pi       # TODO: Balance this
-    ACCEL = 125                     # TODO: Balance this
+    MOVE_VELOCITY = 400             # TODO: Balance this
+    ROTATE_VELOCITY = math.pi/20       # TODO: Balance this
+    ROTATE_ACCEL = math.pi/64        # TODO: Balance this
+    ACCEL = 50                     # TODO: Balance this
     DIRECTION_OVAL_DISTANCE = 100
     DIRECTION_OVAL_COLOR = '#ff0000'
     DIRECTION_OVAL_WIDTH = 5
@@ -20,34 +18,36 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
 
     def __init__(self, bind_to, canvas):
         Entity.__init__(self, Vector(GAME_WIDTH//2, GAME_HEIGHT//2))
-        Movable.__init__(self, 0, 0, self.ACCEL)
+        Movable.__init__(self, 0, 0, accel=Player.ACCEL,
+                         ang_accel=Player.ROTATE_ACCEL,
+                         max_speed=Player.MOVE_VELOCITY,
+                         max_rot_val=Player.ROTATE_VELOCITY)
         Renderable.__init__(self, self.pos, 80, 110,
                             'resources/gardiner.gif', canvas)
         Shootable.__init__(self, Player.SHOOT_INTERVAL)
         Killable.__init__(self, 1)
-        # TODO: Set correct ellipse dimensions
         Collidable.__init__(self, self.pos.x, self.pos.y,
                             80, 110, canvas)
         self._rotating = 0
 
         # Movement event bindings
         bind_to.bind('<KeyPress-Up>',
-                     lambda _: self.start_moving_forward())
+                     lambda _: self.is_accelerating(True))
         bind_to.bind('<KeyPress-Down>',
                      lambda _: None)
         bind_to.bind('<KeyPress-Left>',
-                     lambda _: self.start_rotating(self.ACW))
+                     lambda _: self.rot_dir(Movable.COUNTERCLOCKWISE))
         bind_to.bind('<KeyPress-Right>',
-                     lambda _: self.start_rotating(self.CW))
+                     lambda _: self.rot_dir(Movable.CLOCKWISE))
 
         bind_to.bind('<KeyRelease-Up>',
-                     lambda _: self.stop_moving_forward())
+                     lambda _: self.is_accelerating(False))
         bind_to.bind('<KeyRelease-Down>',
                      lambda _: None)
         bind_to.bind('<KeyRelease-Left>',
-                     lambda _: self.stop_rotating())
+                     lambda _: self.rot_dir(Movable.NO_ROTATION))
         bind_to.bind('<KeyRelease-Right>',
-                     lambda _: self.stop_rotating())
+                     lambda _: self.rot_dir(Movable.NO_ROTATION))
 
         # Bind shooting
         bind_to.bind('<space>',
@@ -60,22 +60,9 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
             0, 0, self.DIRECTION_OVAL_WIDTH, self.DIRECTION_OVAL_WIDTH,
             outline=self.DIRECTION_OVAL_COLOR
         )
-
-    def start_moving_forward(self):
-        self.speed = self.MOVE_VELOCITY
-
-    def stop_moving_forward(self):
-        self.speed = 0
-
-    def start_rotating(self, direction):
-        self._rotating = self.ROTATE_VELOCITY * direction
-
-    def stop_rotating(self):
-        self._rotating = 0
-
     def _direction_oval_loc_(self):
         rloc = Vector(self.DIRECTION_OVAL_DISTANCE, self.direction, polar=True)
-        return Vector(self._pos.x + rloc.x, self._pos.y + rloc.y)
+        return Vector(self._pos.x + rloc.x, self._pos.y - rloc.y)
 
     def _oval_bbox_(self, v):
         size_v = Vector(self.DIRECTION_OVAL_WIDTH, self.DIRECTION_OVAL_WIDTH)
@@ -86,7 +73,7 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     def update(self, delta, gx):
         super().update(delta, gx)
         Shootable.update(self, delta, gx)
-        self.rotate(self._rotating, delta)
+        #self.rotate(self._rotating, delta)
         self.move(delta)
         # Do screen wrapping
         if self.pos.x + self.width//2 < 0:

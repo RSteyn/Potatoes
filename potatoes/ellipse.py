@@ -92,8 +92,7 @@ class Ellipse(Circle):
         )
 
     def get_x(self, y):
-        return self.half_width * math.sqrt(
-            1 - (((y-self.pos.y)/self.half_height)**2))
+        return self.half_width * math.sqrt(1 - (((y-self.pos.y)/self.half_height)**2))
 
     def update(self, gx, pos=None):
         if pos is not None:
@@ -102,16 +101,16 @@ class Ellipse(Circle):
             self.pos.x-self.half_width, self.pos.y-self.half_height,
             self.pos.x+self.half_width, self.pos.y+self.half_height)
         )
-        # For debugging:
+        # # For debugging:
         # for circle in self.circles:
         #     circle.update(gx)
 
-# Testing code
+# # Testing code
 # from tkinter import *
 # root = Tk()
 # c = Canvas(root, width=500, height=500, bg='black')
 # e1 = Ellipse(200, 200, 93, 100, c)
-# e2 = Ellipse(360, 290, 50, 100, c)
+# e2 = Ellipse(360, 290, 65, 110, c)
 # e1.update(c)
 # e2.update(c)
 # print(e1.eccentricity)

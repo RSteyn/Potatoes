@@ -15,39 +15,39 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
 
     def __init__(self, canvas, player: Entity):
         Entity.__init__(self, Vector(100, 100))
-        Movable.__init__(self, 0, 0, self.ACCEL)
+        Movable.__init__(self, 0, 0, accel=Alien.ACCEL, max_speed=Alien.MOVE_VELOCITY)
         Renderable.__init__(self, self.pos, 69, 110,
                             'resources/ruan.gif', canvas)
         Shootable.__init__(self, Alien.SHOOT_INTERVAL)
         Killable.__init__(self, 5)
         # TODO: Set correct ellipse dimensions
         Collidable.__init__(self, self.pos.x, self.pos.y,
-                            69, 110, canvas)
+                            65, 110, canvas)
         self._rotating = 0
         self._target = player
         self._shoot_timer = 0
 
     def ai_update(self, delta, gx):
-        target_diff = self._target.pos - self._pos
-        # TODO: remove magic number?
-        if target_diff.magnitude > self.DIST_FROM_PLAYER + 30:
-            vel = self.MOVE_VELOCITY
-            direc = target_diff.direction
-        elif target_diff.magnitude > self.DIST_FROM_PLAYER - 30:
-            vel = self.MOVE_VELOCITY
-            direc = target_diff.direction + (math.pi / 2)
-        else:
-            vel = -self.MOVE_VELOCITY
-            direc = target_diff.direction + (math.pi / 2)
-        self._target_velocity = Vector(vel, direc, polar=True)
-
-        self.shoot(self.pos, target_diff.direction, gx)
+        pass
+        # target_diff = self._target.pos - self._pos
+        # # TODO: remove magic number?
+        # if target_diff.magnitude > self.DIST_FROM_PLAYER + 30:
+        #     vel = self.MOVE_VELOCITY
+        #     direc = target_diff.direction
+        # elif target_diff.magnitude > self.DIST_FROM_PLAYER - 30:
+        #     vel = self.MOVE_VELOCITY
+        #     direc = target_diff.direction + (math.pi / 2)
+        # else:
+        #     vel = -self.MOVE_VELOCITY
+        #     direc = target_diff.direction + (math.pi / 2)
+        # self._cur_velocity = Vector(vel, direc, polar=True)
+        #
+        # self.shoot(self.pos, target_diff.direction, gx)
 
     def update(self, delta, gx):
         super().update(delta, gx)
         Shootable.update(self, delta, gx)
         self.ai_update(delta, gx)
-        self.rotate(self._rotating, delta)
         self.move(delta)
 
         gx.coords(self.img, (self._pos.x, self._pos.y))

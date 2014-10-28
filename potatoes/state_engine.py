@@ -87,17 +87,17 @@ class GameState(State):
             self.cumulative_time -= 1
             self.frame_count = self.frames
             self.frames = 0
-
+        self.print_debug()
         # Actual game updates
         if self.game.running:
             self.player.update(delta, self.canvas)
 
-            self._asteroid_spawn_timer += delta
-            if self._asteroid_spawn_timer >= self.ASTEROID_INTERVAL and \
-                    len(self.asteroids) < self.MAX_ASTEROIDS:
-                # Spawn an asteroid
-                self.asteroids.append(Asteroid(self, self.canvas))
-                self._asteroid_spawn_timer = 0
+            # self._asteroid_spawn_timer += delta
+            # if self._asteroid_spawn_timer >= self.ASTEROID_INTERVAL and \
+            #         len(self.asteroids) < self.MAX_ASTEROIDS:
+            #     # Spawn an asteroid
+            #     self.asteroids.append(Asteroid(self, self.canvas))
+            #     self._asteroid_spawn_timer = 0
 
             # Update asteroids
             for asteroid in self.asteroids:
@@ -110,11 +110,22 @@ class GameState(State):
                                 fill=Game.TEXT_COLOUR,
                                 anchor=NW,
                                 tag='debug')
-        self.canvas.create_text(20, 40, text=self._asteroid_spawn_timer,
+        self.canvas.create_text(20, 40, text=self.asteroids,
                                 font=(Game.FONT, 12),
                                 fill=Game.TEXT_COLOUR,
                                 anchor=NW,
                                 tag='debug')
+        self.canvas.create_text(20, 60, text=self.player.direction,
+                                font=(Game.FONT, 12),
+                                fill=Game.TEXT_COLOUR,
+                                anchor=NW,
+                                tag='debug')
+        self.canvas.create_text(20, 80, text=self.player._cur_velocity,
+                                font=(Game.FONT, 12),
+                                fill=Game.TEXT_COLOUR,
+                                anchor=NW,
+                                tag='debug')
+
     # Miscellaneous
     def pause(self, _):
         """ Method to toggle the is_running boolean in the game
@@ -134,13 +145,14 @@ class GameState(State):
     def remove_asteroid(self, asteroid):
         self.asteroids.remove(asteroid)
 
+
 class Game:
     # Class variables and methods.
     BACKGROUND_COLOUR = 'black'
     TEXT_COLOUR = "#FFFFFF"
     FONT = "Menlo"
     FONT_SIZE = 15
-    TICK_TIME = 16
+    TICK_TIME = 1
     FPS = 1 // TICK_TIME
 
     #==============================#

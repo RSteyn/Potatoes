@@ -8,6 +8,9 @@ class Entity:
     @property
     def pos(self):
         return self._pos
+    @pos.setter
+    def pos(self, value):
+        self._pos = value
 
     def update(self, delta, gx):
         pass
