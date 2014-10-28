@@ -1,9 +1,10 @@
 from potatoes.vector import Vector
+from ..values import GAME_WIDTH, GAME_HEIGHT
 import math
 
 class Movable:
     _FRICTION = 0.98         # TODO: Balance this
-    ANG_FRICTION = 0.85      # TODO: Balance this
+    ANG_FRICTION = 0.5      # TODO: Balance this
     CLOCKWISE = -1
     NO_ROTATION = 0
     COUNTERCLOCKWISE = 1
@@ -79,3 +80,23 @@ class Movable:
             self.angular_vel *= Movable.ANG_FRICTION*(1-delta)
         self.angular_vel += self._ang_accel * self._rot_dir
         self.direction += self.angular_vel
+
+        # If necessary, wrap object around screen
+        if self.screen_wrap:
+            self.perform_screen_wrap()
+
+    def perform_screen_wrap(self):
+        # Do screen wrapping
+        if self.pos.x + self.width//2 < 0:
+            # Beyond left edge of screen, move to right
+            self._pos = Vector(GAME_WIDTH + self.width//2, self._pos.y)
+        elif self.pos.x - self.width//2 > GAME_WIDTH:
+            # Beyond right edge of screen, move to left
+            self._pos = Vector(-self.width//2, self._pos.y)
+
+        if self.pos.y + self.height//2 < 0:
+            # Beyond top edge of screen, move to bottom
+            self._pos = Vector(self._pos.x, GAME_HEIGHT + self.height//2)
+        elif self.pos.y - self.height//2 > GAME_HEIGHT:
+            # Beyond bottom edge of screen, move to left
+            self._pos = Vector(self._pos.x, -self.height//2)

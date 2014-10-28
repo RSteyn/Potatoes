@@ -8,7 +8,7 @@ import math
 
 class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     MOVE_VELOCITY = 400             # TODO: Balance this
-    ROTATE_VELOCITY = math.pi/20       # TODO: Balance this
+    ROTATE_VELOCITY = 0.02       # TODO: Balance this
     ROTATE_ACCEL = math.pi/64        # TODO: Balance this
     ACCEL = 50                     # TODO: Balance this
     DIRECTION_OVAL_DISTANCE = 100
@@ -17,7 +17,8 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     SHOOT_INTERVAL = 0.5
 
     def __init__(self, bind_to, canvas):
-        Entity.__init__(self, Vector(GAME_WIDTH//2, GAME_HEIGHT//2))
+        Entity.__init__(self, Vector(GAME_WIDTH//2, GAME_HEIGHT//2),
+                        screen_wrap=True)
         Movable.__init__(self, 0, 0,
                          accel=Player.ACCEL,
                          ang_accel=Player.ROTATE_ACCEL,
@@ -28,7 +29,7 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         Shootable.__init__(self, Player.SHOOT_INTERVAL)
         Killable.__init__(self, 1)
         Collidable.__init__(self, self.pos.x, self.pos.y,
-                            80, 110, canvas)
+                            40, 55, canvas)
         self._rotating = 0
 
         # Movement event bindings
@@ -53,7 +54,7 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         # Bind shooting
         bind_to.bind('<space>',
                      lambda _: self.shoot(self.pos,
-                                          self.direction,
+                                          -self.direction,
                                           canvas))
 
         # Create direction pointer
@@ -76,6 +77,17 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         Shootable.update(self, delta, gx)
         #self.rotate(self._rotating, delta)
         self.move(delta)
+        self.perform_screen_wrap()
+        self.bounding_ellipse.update(gx, self.pos)
+
+        # Move image on canvas
+        gx.coords(self.img, (self._pos.x, self._pos.y))
+
+        # Move directional pointer on canvas
+        new_oval_loc = self._direction_oval_loc_()
+        gx.coords(self._oval, self._oval_bbox_(new_oval_loc))
+
+    def perform_screen_wrap(self):
         # Do screen wrapping
         if self.pos.x + self.width//2 < 0:
             # Beyond left edge of screen, move to right
@@ -90,12 +102,3 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         elif self.pos.y - self.height//2 > GAME_HEIGHT:
             # Beyond bottom edge of screen, move to left
             self._pos = Vector(self._pos.x, -self.height//2)
-
-        self.bounding_ellipse.update(gx, self.pos)
-
-        # Move image on canvas
-        gx.coords(self.img, (self._pos.x, self._pos.y))
-
-        # Move directional pointer on canvas
-        new_oval_loc = self._direction_oval_loc_()
-        gx.coords(self._oval, self._oval_bbox_(new_oval_loc))

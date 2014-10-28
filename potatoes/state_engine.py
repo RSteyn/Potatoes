@@ -68,9 +68,11 @@ class GameState(State):
         # Game-specific, rather than engine-specific variables
         self.score = 0
         self.player = Player(self.game.root, self.canvas)
-        self.asteroids = [Asteroid(self, self.canvas)]
+        self.asteroids = []
         self._asteroid_spawn_timer = 0
         self.alien = Alien(self.canvas, self.player)
+
+        self.spawn_asteroid(GameState.MAX_ASTEROIDS)
 
     def clean_up(self):
         super().clean_up()
@@ -92,12 +94,12 @@ class GameState(State):
         if self.game.running:
             self.player.update(delta, self.canvas)
 
-            # self._asteroid_spawn_timer += delta
-            # if self._asteroid_spawn_timer >= self.ASTEROID_INTERVAL and \
-            #         len(self.asteroids) < self.MAX_ASTEROIDS:
-            #     # Spawn an asteroid
-            #     self.asteroids.append(Asteroid(self, self.canvas))
-            #     self._asteroid_spawn_timer = 0
+            self._asteroid_spawn_timer += delta
+            if self._asteroid_spawn_timer >= self.ASTEROID_INTERVAL and \
+                    len(self.asteroids) < self.MAX_ASTEROIDS:
+                # Spawn an asteroid
+                self.asteroids.append(Asteroid(self, self.canvas))
+                self._asteroid_spawn_timer = 0
 
             # Update asteroids
             for asteroid in self.asteroids:
@@ -120,7 +122,7 @@ class GameState(State):
                                 fill=Game.TEXT_COLOUR,
                                 anchor=NW,
                                 tag='debug')
-        self.canvas.create_text(20, 80, text=self.alien._cur_velocity,
+        self.canvas.create_text(20, 80, text=self.player._cur_velocity,
                                 font=(Game.FONT, 12),
                                 fill=Game.TEXT_COLOUR,
                                 anchor=NW,
@@ -142,6 +144,9 @@ class GameState(State):
                 self.canvas.delete('pause_text')
 
     # Game-specific methods
+    def spawn_asteroid(self, num=1):
+        for i in range(num):
+            self.asteroids.append(Asteroid(self, self.canvas))
     def remove_asteroid(self, asteroid):
         self.asteroids.remove(asteroid)
 

@@ -1,4 +1,5 @@
 from ..entity.bullet import Bullet
+from ..ellipse import Ellipse
 
 class Shootable:
     def __init__(self, interval):
@@ -28,3 +29,13 @@ class Shootable:
     def update(self, delta, gx):
         self._shoot_timer += delta
         self._update_bullets(delta, gx)
+
+    def check_bullet_collisions(self, collidables):
+        for entity in collidables:
+            for bullet in self.bullets:
+                if Ellipse.collision(
+                        bullet.bounding_ellipse,
+                        entity.bounding_ellipse):
+                    # Collision has occurred:
+                    entity.bullet_collide(bullet)
+                    self.bullets.remove(bullet)

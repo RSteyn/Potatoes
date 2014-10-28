@@ -27,7 +27,7 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         Shootable.__init__(self, Alien.SHOOT_INTERVAL)
         Killable.__init__(self, 5)
         Collidable.__init__(self, self.pos.x, self.pos.y,
-                            65, 110, canvas)
+                            32, 55, canvas)
         self._rotating = 0
         self._target = player
         self._shoot_timer = 0
