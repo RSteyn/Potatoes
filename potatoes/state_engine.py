@@ -45,7 +45,7 @@ class State:
 
 
 class GameState(State):
-    MAX_ASTEROIDS = 7                       # TODO: Balance this
+    MAX_ASTEROIDS = 14                       # TODO: Balance this
     ASTEROID_INTERVAL = 1                   # TODO: Balance this
 
     def __init__(self, game):
@@ -67,12 +67,19 @@ class GameState(State):
 
         # Game-specific, rather than engine-specific variables
         self.score = 0
-        self.player = Player(self.game.root, self.canvas)
+        self.player = Player(self, self.game.root, self.canvas)
         self.asteroids = []
         self._asteroid_spawn_timer = 0
-        self.alien = Alien(self.canvas, self.player)
+        self.alien = Alien(self, self.canvas, self.player)
 
         self.spawn_asteroid(GameState.MAX_ASTEROIDS)
+
+        # DEBUGGING:
+        self.player._shoot_timer = 50
+        self.player.shoot(Vector(200, 600), 0, self.canvas)
+        self.asteroids.append(Asteroid(self, self.canvas, size=3))
+        self.asteroids[-1].pos = Vector(600, 600)
+        self.asteroids[-1].bounding_ellipse.pos = Vector(600, 600)
 
     def clean_up(self):
         super().clean_up()
@@ -89,40 +96,27 @@ class GameState(State):
             self.cumulative_time -= 1
             self.frame_count = self.frames
             self.frames = 0
-        self.print_debug()
         # Actual game updates
         if self.game.running:
+            # Tags all items on canvas:
+            self.canvas.addtag_all('idle')
             self.player.update(delta, self.canvas)
-
-            self._asteroid_spawn_timer += delta
-            if self._asteroid_spawn_timer >= self.ASTEROID_INTERVAL and \
-                    len(self.asteroids) < self.MAX_ASTEROIDS:
-                # Spawn an asteroid
-                self.asteroids.append(Asteroid(self, self.canvas))
-                self._asteroid_spawn_timer = 0
 
             # Update asteroids
             for asteroid in self.asteroids:
                 asteroid.update(delta, self.canvas)
+            self.asteroid_timer(delta)
+
             self.alien.update(delta, self.canvas)
 
+            # Check collisions
+            self.check_collisions()
+
+            # Delete all remaining idle objects
+            self.canvas.delete('idle')
+        self.print_debug()
     def print_debug(self):
         self.canvas.create_text(20, 20, text='FPS: ' + str(self.frame_count),
-                                font=(Game.FONT, 12),
-                                fill=Game.TEXT_COLOUR,
-                                anchor=NW,
-                                tag='debug')
-        self.canvas.create_text(20, 40, text=self.alien._target_pos,
-                                font=(Game.FONT, 12),
-                                fill=Game.TEXT_COLOUR,
-                                anchor=NW,
-                                tag='debug')
-        self.canvas.create_text(20, 60, text=self.alien.pos,
-                                font=(Game.FONT, 12),
-                                fill=Game.TEXT_COLOUR,
-                                anchor=NW,
-                                tag='debug')
-        self.canvas.create_text(20, 80, text=self.player._cur_velocity,
                                 font=(Game.FONT, 12),
                                 fill=Game.TEXT_COLOUR,
                                 anchor=NW,
@@ -144,12 +138,25 @@ class GameState(State):
                 self.canvas.delete('pause_text')
 
     # Game-specific methods
-    def spawn_asteroid(self, num=1):
-        for i in range(num):
+    def asteroid_timer(self, delta):
+        self._asteroid_spawn_timer += delta
+        if self._asteroid_spawn_timer >= self.ASTEROID_INTERVAL and \
+                len(self.asteroids) < self.MAX_ASTEROIDS:
+            # Spawn an asteroid
             self.asteroids.append(Asteroid(self, self.canvas))
+            self._asteroid_spawn_timer = 0
+    def spawn_asteroid(self, num=1, direction=None, size=3, pos=None):
+        for i in range(num):
+            self.asteroids.append(Asteroid(self, self.canvas,
+                                           direction=direction,
+                                           size=size, pos=pos))
     def remove_asteroid(self, asteroid):
         self.asteroids.remove(asteroid)
+    def check_collisions(self):
+        # Check player-bullet collisions
+        self.player.check_bullet_collisions(self.asteroids+[self.alien])
 
+        # Check asteroid collisions with player
 
 class Game:
     # Class variables and methods.

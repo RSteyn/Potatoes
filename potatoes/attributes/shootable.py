@@ -15,7 +15,8 @@ class Shootable:
         :param canvas: The game canvas
         """
         if self._shoot_timer >= self.interval:
-            self.bullets.append(Bullet(self, pos, direction, canvas))
+            self.bullets.append(Bullet(self.state, self,
+                                       pos, direction, canvas))
             self._shoot_timer = 0
 
     def _update_bullets(self, delta, gx):
@@ -37,5 +38,5 @@ class Shootable:
                         bullet.bounding_ellipse,
                         entity.bounding_ellipse):
                     # Collision has occurred:
-                    entity.bullet_collide(bullet)
+                    entity.collide_with_bullet(bullet)
                     self.bullets.remove(bullet)

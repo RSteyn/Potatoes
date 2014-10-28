@@ -16,8 +16,9 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     DIRECTION_OVAL_WIDTH = 5
     SHOOT_INTERVAL = 0.5
 
-    def __init__(self, bind_to, canvas):
-        Entity.__init__(self, Vector(GAME_WIDTH//2, GAME_HEIGHT//2),
+    def __init__(self, state, bind_to, canvas):
+        Entity.__init__(self, state,
+                        Vector(GAME_WIDTH//2, GAME_HEIGHT//2),
                         screen_wrap=True)
         Movable.__init__(self, 0, 0,
                          accel=Player.ACCEL,
@@ -28,7 +29,7 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
                             'resources/gardiner.gif', canvas)
         Shootable.__init__(self, Player.SHOOT_INTERVAL)
         Killable.__init__(self, 1)
-        Collidable.__init__(self, self.pos.x, self.pos.y,
+        Collidable.__init__(self, self.pos,
                             40, 55, canvas)
         self._rotating = 0
 
@@ -74,6 +75,7 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
 
     def update(self, delta, gx):
         super().update(delta, gx)
+        Renderable.update(self)
         Shootable.update(self, delta, gx)
         #self.rotate(self._rotating, delta)
         self.move(delta)
@@ -81,6 +83,9 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         self.bounding_ellipse.update(gx, self.pos)
 
         # Move image on canvas
+        try:
+            self.state.canvas.dtag(self._oval, 'idle')
+        except: pass
         gx.coords(self.img, (self._pos.x, self._pos.y))
 
         # Move directional pointer on canvas
