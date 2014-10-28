@@ -37,6 +37,9 @@ class Vector:
         pol_vect = Vector(pol_vect[0], pol_vect[1], polar=True)
         return pol_vect
 
+    def to_magnitude(self, value):
+        return self.normalise() * value
+
     @property
     def x(self):
         return self._x
@@ -81,6 +84,9 @@ class Vector:
 
     def __rmul__(self, other):
         return self.__mul__(other)
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
 
     def __len__(self):
         return self.magnitude

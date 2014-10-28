@@ -18,7 +18,8 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
 
     def __init__(self, bind_to, canvas):
         Entity.__init__(self, Vector(GAME_WIDTH//2, GAME_HEIGHT//2))
-        Movable.__init__(self, 0, 0, accel=Player.ACCEL,
+        Movable.__init__(self, 0, 0,
+                         accel=Player.ACCEL,
                          ang_accel=Player.ROTATE_ACCEL,
                          max_speed=Player.MOVE_VELOCITY,
                          max_rot_val=Player.ROTATE_VELOCITY)

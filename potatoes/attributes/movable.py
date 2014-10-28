@@ -2,13 +2,14 @@ from potatoes.vector import Vector
 import math
 
 class Movable:
-    FRICTION = 1         # TODO: Balance this
+    _FRICTION = 0.98         # TODO: Balance this
     ANG_FRICTION = 0.85      # TODO: Balance this
     CLOCKWISE = -1
     NO_ROTATION = 0
     COUNTERCLOCKWISE = 1
     def __init__(self, velocity=0, direction=0, accel=0,
-                 ang_accel=0, max_speed=0, max_rot_val=0):
+                 ang_accel=0, max_speed=0, max_rot_val=0,
+                 friction=_FRICTION):
         # Linear variables
         # Current velocity:
         self._cur_velocity = Vector(velocity, direction, polar=True)
@@ -17,6 +18,7 @@ class Movable:
         self._acceleration = accel
         self._is_accelerating = False
         self.max_speed = max_speed
+        self.friction_coefficient = friction
 
         # Rotational variables
         self.angular_vel = 0
@@ -59,7 +61,7 @@ class Movable:
         elif self.speed < 0.1:
             self._cur_velocity = Vector(0, 0)
         else:
-            self._cur_velocity *= Movable.FRICTION
+            self._cur_velocity *= self.friction_coefficient
         if self.speed > self.max_speed:
             self._cur_velocity = self._cur_velocity.normalise()*self.max_speed
         # Adds current velocity to position

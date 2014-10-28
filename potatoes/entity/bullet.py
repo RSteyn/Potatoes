@@ -12,7 +12,10 @@ class Bullet(Entity, Movable, Renderable, Killable, Collidable):
 
     def __init__(self, shooter, pos, direction, canvas):
         Entity.__init__(self, pos)
-        Movable.__init__(self, self.VELOCITY, direction, self.ACCEL)
+        Movable.__init__(self, Bullet.VELOCITY, direction,
+                 accel=Bullet.ACCEL,
+                 max_speed=Bullet.VELOCITY,
+                 friction=1)
         Renderable.__init__(self, self.pos, 22, 35,
                             'resources/cutter.gif', canvas)
         Killable.__init__(self, 1)
