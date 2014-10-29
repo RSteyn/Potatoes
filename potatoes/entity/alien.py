@@ -70,4 +70,4 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     def destroy(self):
         self.state.canvas.delete(str(self.bounding_ellipse))
         self.state.canvas.delete(str(self))
-        self.state.alien(self)
+        self.state.aliens.remove(self)

@@ -45,7 +45,7 @@ class State:
 
 
 class GameState(State):
-    MAX_ASTEROIDS = 14                       # TODO: Balance this
+    MAX_ASTEROIDS = 10                       # TODO: Balance this
     ASTEROID_INTERVAL = 1                   # TODO: Balance this
 
     def __init__(self, game):
@@ -70,7 +70,7 @@ class GameState(State):
         self.player = Player(self, self.game.root, self.canvas)
         self.asteroids = []
         self._asteroid_spawn_timer = 0
-        self.alien = Alien(self, self.canvas, self.player)
+        self.aliens = [Alien(self, self.canvas, self.player)]
 
         self.spawn_asteroid(GameState.MAX_ASTEROIDS)
 
@@ -107,7 +107,9 @@ class GameState(State):
                 asteroid.update(delta, self.canvas)
             self.asteroid_timer(delta)
 
-            self.alien.update(delta, self.canvas)
+            # Update aliens
+            for alien in self.aliens:
+                alien.update(delta, self.canvas)
 
             # Check collisions
             self.check_collisions()
@@ -154,7 +156,7 @@ class GameState(State):
         self.asteroids.remove(asteroid)
     def check_collisions(self):
         # Check player-bullet collisions
-        self.player.check_bullet_collisions(self.asteroids+[self.alien])
+        self.player.check_bullet_collisions(self.asteroids+self.aliens)
 
         # Check asteroid collisions with player
 
