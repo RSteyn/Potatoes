@@ -63,3 +63,11 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
 
         gx.coords(self.img, (self._pos.x, self._pos.y))
         self.bounding_ellipse.update(gx, self.pos)
+
+    def collide_with_bullet(self, bullet):
+        self.destroy()
+
+    def destroy(self):
+        self.state.canvas.delete(str(self.bounding_ellipse))
+        self.state.canvas.delete(str(self))
+        self.state.alien(self)

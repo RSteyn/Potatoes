@@ -8,7 +8,7 @@ import math
 
 class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     MOVE_VELOCITY = 400             # TODO: Balance this
-    ROTATE_VELOCITY = 0.02       # TODO: Balance this
+    ROTATE_VELOCITY = 0.08       # TODO: Balance this
     ROTATE_ACCEL = math.pi/64        # TODO: Balance this
     ACCEL = 50                     # TODO: Balance this
     DIRECTION_OVAL_DISTANCE = 100

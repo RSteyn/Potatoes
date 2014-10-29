@@ -25,7 +25,8 @@ class Shootable:
             bullet.update(delta, gx)
 
     def remove(self, bullet):
-        self.bullets.remove(bullet)
+        if bullet in self.bullets:
+            self.bullets.remove(bullet)
 
     def update(self, delta, gx):
         self._shoot_timer += delta
@@ -33,7 +34,8 @@ class Shootable:
 
     def check_bullet_collisions(self, collidables):
         for entity in collidables:
-            for bullet in self.bullets:
+            for i in range(len(self.bullets)-1, -1, -1):
+                bullet = self.bullets[i]
                 if Ellipse.collision(
                         bullet.bounding_ellipse,
                         entity.bounding_ellipse):

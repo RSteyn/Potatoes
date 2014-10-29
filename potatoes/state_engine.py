@@ -158,6 +158,7 @@ class GameState(State):
 
         # Check asteroid collisions with player
 
+
 class Game:
     # Class variables and methods.
     BACKGROUND_COLOUR = 'black'

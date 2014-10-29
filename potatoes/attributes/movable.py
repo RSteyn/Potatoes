@@ -3,7 +3,7 @@ from ..values import GAME_WIDTH, GAME_HEIGHT
 import math
 
 class Movable:
-    _FRICTION = 0.98         # TODO: Balance this
+    _FRICTION = 0.96         # TODO: Balance this
     ANG_FRICTION = 0.5      # TODO: Balance this
     CLOCKWISE = -1
     NO_ROTATION = 0
