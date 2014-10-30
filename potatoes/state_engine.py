@@ -45,7 +45,7 @@ class State:
 
 
 class GameState(State):
-    MAX_ASTEROIDS = 10                       # TODO: Balance this
+    MAX_ASTEROIDS = 5                       # TODO: Balance this
     ASTEROID_INTERVAL = 1                   # TODO: Balance this
 
     def __init__(self, game):
