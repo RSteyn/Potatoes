@@ -7,8 +7,8 @@ from ..values import GAME_HEIGHT, GAME_WIDTH
 
 
 class Bullet(Entity, Movable, Renderable, Killable, Collidable):
-    VELOCITY = 200         # TODO: Balance this
-    ACCEL = 2000            # TODO: Balance this
+    VELOCITY = 300
+    ACCEL = 2000
 
     def __init__(self, state, shooter, pos, direction, canvas):
         Entity.__init__(self, state, pos)
