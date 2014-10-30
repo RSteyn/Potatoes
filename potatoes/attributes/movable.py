@@ -78,7 +78,7 @@ class Movable:
                 self.angular_vel = self.max_rot_vel
         elif self._rot_dir == Movable.NO_ROTATION:
             self.angular_vel *= Movable.ANG_FRICTION*(1-delta)
-        self.angular_vel += self._ang_accel * self._rot_dir
+        self.angular_vel += self._ang_accel * self._rot_dir * delta
         self.direction += self.angular_vel
 
         # If necessary, wrap object around screen
