@@ -2,8 +2,9 @@ from . import Entity
 from ..attributes import Movable, Renderable, Shootable, Killable
 from ..attributes.collidable import Collidable
 from ..vector import Vector
-from random import randrange
+from random import random, randrange
 from ..values import GAME_WIDTH, GAME_HEIGHT
+import math
 
 
 class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
@@ -15,9 +16,14 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     SHOOT_INTERVAL = 3              # TODO: Balance this
     DIST_FROM_PLAYER = 400          # TODO: Balance this
 
-    def __init__(self, state, canvas, player: Entity):
+    def __init__(self, state, canvas, player: Entity, direction=None, pos=None):
+        # Copied DIRECTLY from top of Asteroid.__init__()
+        if direction is None:
+            dir = 2*math.pi * random()
+        else:
+            dir = direction
         Entity.__init__(self, state, Vector(100, 100))
-        Movable.__init__(self, 0, 0,
+        Movable.__init__(self, 0, dir,
                          accel=Alien.ACCEL,
                          ang_accel=Alien.ROTATE_ACCEL,
                          max_speed=Alien.MOVE_VELOCITY,
@@ -28,6 +34,30 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         Killable.__init__(self, 5)
         Collidable.__init__(self, self.pos,
                             32, 55, canvas)
+
+        # Copied DIRECTLY from bottom of Asteroid.__init__()
+        if pos is None:
+            # Set asteroid at correct position
+            if math.pi/4 > dir > -math.pi/4:
+                # Direction in left-quadrant, heading left
+                start_pos = Vector(GAME_WIDTH+self.width//2,
+                                   randrange(GAME_HEIGHT+self.height//2))
+            elif 3*math.pi//4 < dir < math.pi or -3*math.pi//4 > dir > -math.pi:
+                # Direction in right-quadrant, heading right
+                start_pos = Vector(-self.width//2,
+                                   randrange(GAME_HEIGHT+self.height//2))
+            elif math.pi/4 < dir < 3*math.pi//4:
+                # Direction in bottom-quadrant, heading downwards
+                start_pos = Vector(randrange(GAME_WIDTH+self.width//2),
+                                   -self.height//2)
+            else:
+                # Direction in upper-quadrant, heading upwards
+                start_pos = Vector(randrange(GAME_WIDTH+self.width//2),
+                                   GAME_HEIGHT+self.height//2-1)
+            self.pos = start_pos
+        else:
+            self.pos = pos
+
         self._rotating = 0
         self._target = player
         self._shoot_timer = 0

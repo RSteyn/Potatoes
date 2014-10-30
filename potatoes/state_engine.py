@@ -45,10 +45,10 @@ class State:
 
 
 class GameState(State):
-    MAX_ASTEROIDS = 7                       # TODO: Balance this
+    MAX_ASTEROIDS = 5                       # TODO: Balance this
     ASTEROID_INTERVAL = 1                   # TODO: Balance this
     MAX_ALIENS = 1
-    ALIEN_INTERVAL = 5
+    ALIEN_INTERVAL = 15
 
     def __init__(self, game):
         super().__init__(game)
@@ -72,7 +72,7 @@ class GameState(State):
         self.player = Player(self, self.game.root, self.canvas)
         self.asteroids = []
         self._asteroid_spawn_timer = 0
-        self.aliens = [Alien(self, self.canvas, self.player)]
+        self.aliens = []
         self._alien_spawn_timer = 0
 
         self.spawn_asteroid(GameState.MAX_ASTEROIDS)
@@ -152,11 +152,11 @@ class GameState(State):
 
     # Game-specific methods
     def alien_timer(self, delta):
-        self._alien_spawn_timer += delta
-        if self._alien_spawn_timer >= self.ALIEN_INTERVAL and \
-                len(self.aliens) < self.MAX_ALIENS:
-            self.aliens.append(Alien(self, self.canvas, self.player))
-            self._alien_spawn_timer = 0
+        if len(self.aliens) < self.MAX_ALIENS:
+            self._alien_spawn_timer += delta
+            if self._alien_spawn_timer >= self.ALIEN_INTERVAL:
+                self.aliens.append(Alien(self, self.canvas, self.player))
+                self._alien_spawn_timer = 0
     def asteroid_timer(self, delta):
         self._asteroid_spawn_timer += delta
         if self._asteroid_spawn_timer >= self.ASTEROID_INTERVAL and \
