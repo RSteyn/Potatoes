@@ -33,12 +33,14 @@ class Shootable:
         self._update_bullets(delta, gx)
 
     def check_bullet_collisions(self, collidables):
+        n_collided = 0
         for entity in collidables:
             for i in range(len(self.bullets)-1, -1, -1):
                 bullet = self.bullets[i]
-                if Ellipse.collision(
-                        bullet.bounding_ellipse,
-                        entity.bounding_ellipse):
+                if Ellipse.collision(bullet.bounding_ellipse,
+                                     entity.bounding_ellipse):
                     # Collision has occurred:
                     entity.kill(bullet)
                     self.bullets.remove(bullet)
+                    n_collided += 1
+        return n_collided

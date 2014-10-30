@@ -116,6 +116,13 @@ class GameState(State):
 
             # Delete all remaining idle objects
             self.canvas.delete('idle')
+        self.canvas.delete('score_text')
+        self.canvas.create_text(self.game.width - 20, 20,
+                                text="Score: {}".format(self.score),
+                                font=(Game.FONT, 12),
+                                fill=Game.TEXT_COLOUR,
+                                anchor=NE,
+                                tag='score_text')
         self.print_debug()
     def print_debug(self):
         self.canvas.create_text(20, 20, text='FPS: ' + str(self.frame_count),
@@ -156,7 +163,9 @@ class GameState(State):
         self.asteroids.remove(asteroid)
     def check_collisions(self):
         # Check player-bullet collisions
-        self.player.check_bullet_collisions(self.asteroids+self.aliens)
+        self.score += self.player.check_bullet_collisions(
+            self.asteroids + self.aliens
+        )
         for alien in self.aliens:
            alien.check_bullet_collisions([self.player])
         for asteroid in self.asteroids:
@@ -166,6 +175,7 @@ class GameState(State):
         self.player = Player(self, self.game.root, self.canvas)
         for alien in self.aliens:
             alien.set_target(self.player)
+        self.score = 0
 
 
 class Game:
