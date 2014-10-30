@@ -157,8 +157,12 @@ class GameState(State):
     def check_collisions(self):
         # Check player-bullet collisions
         self.player.check_bullet_collisions(self.asteroids+self.aliens)
+        for alien in self.aliens:
+           alien.check_bullet_collisions([self.player])
 
         # Check asteroid collisions with player
+    def player_respawn(self):
+        self.player = Player(self, self.game.root, self.canvas)
 
 
 class Game:
