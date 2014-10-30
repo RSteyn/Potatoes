@@ -54,6 +54,9 @@ class Alien(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         shoot_target_diff = self._target.pos - self.pos
         self.shoot(self.pos, shoot_target_diff.direction, gx)
 
+    def set_target(self, target):
+        self._target = target
+
     def update(self, delta, gx):
         super().update(delta, gx)
         Renderable.update(self)
