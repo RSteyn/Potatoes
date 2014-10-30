@@ -9,7 +9,7 @@ import math
 class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
     MOVE_VELOCITY = 200
     ROTATE_VELOCITY = 0
-    ROTATE_ACCEL = math.pi/97
+    ROTATE_ACCEL = math.pi/97.5
     ACCEL = 5
     DIRECTION_OVAL_DISTANCE = 100
     DIRECTION_OVAL_COLOR = '#ff0000'
