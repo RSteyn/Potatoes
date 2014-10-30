@@ -16,5 +16,5 @@ class Killable:
     def dead(self):
         return self._health <= 0
 
-    def collide_with_bullet(self, bullet):
+    def kill(self, bullet):
         pass

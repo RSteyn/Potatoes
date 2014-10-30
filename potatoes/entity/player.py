@@ -112,6 +112,6 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
             # Beyond bottom edge of screen, move to left
             self._pos = Vector(self._pos.x, -self.height//2)
 
-    def collide_with_bullet(self, bullet):
+    def kill(self, bullet):
         if not self.invulnerable:
             self.state.player_respawn()

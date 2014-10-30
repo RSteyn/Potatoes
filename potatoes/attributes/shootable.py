@@ -40,5 +40,5 @@ class Shootable:
                         bullet.bounding_ellipse,
                         entity.bounding_ellipse):
                     # Collision has occurred:
-                    entity.collide_with_bullet(bullet)
+                    entity.kill(bullet)
                     self.bullets.remove(bullet)

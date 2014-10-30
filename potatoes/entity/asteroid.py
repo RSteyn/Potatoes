@@ -3,6 +3,7 @@ from ..attributes.collidable import Collidable
 from .entity import Entity
 from ..vector import Vector
 from ..values import GAME_WIDTH, GAME_HEIGHT
+from ..ellipse import Ellipse
 from random import random, randrange, choice
 import math
 
@@ -82,7 +83,7 @@ class Asteroid(Entity, Movable, Renderable, Killable, Collidable):
         gx.coords(self.img, (self._pos.x, self._pos.y))
         self.bounding_ellipse.update(gx, self.pos)
 
-    def collide_with_bullet(self, bullet):
+    def kill(self, bullet):
         bullet_dir = bullet.direction
         if self.size > 1:
             # Spawn smaller asteroids
@@ -97,3 +98,9 @@ class Asteroid(Entity, Movable, Renderable, Killable, Collidable):
         self.state.canvas.delete(str(self.bounding_ellipse))
         self.state.canvas.delete(str(self))
         self.state.remove_asteroid(self)
+
+    def check_collisions(self, collidables):
+        for entity in collidables:
+            if Ellipse.collision(self.bounding_ellipse,
+                                 entity.bounding_ellipse):
+                entity.kill(None)
