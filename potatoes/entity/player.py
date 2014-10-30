@@ -32,6 +32,8 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         Collidable.__init__(self, self.pos,
                             40, 55, canvas)
         self._rotating = 0
+        self._invul_time = 1
+        self.invulnerable = True
 
         # Movement event bindings
         bind_to.bind('<KeyPress-Up>',
@@ -77,15 +79,17 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         super().update(delta, gx)
         Renderable.update(self)
         Shootable.update(self, delta, gx)
-        #self.rotate(self._rotating, delta)
+
+        if self._invul_time > 0:
+            self._invul_time -= delta
+        else:
+            self.invulnerable = False
         self.move(delta)
         self.perform_screen_wrap()
         self.bounding_ellipse.update(gx, self.pos)
 
         # Move image on canvas
-        try:
-            self.state.canvas.dtag(self._oval, 'idle')
-        except: pass
+        self.state.canvas.dtag(self._oval, 'idle')
         gx.coords(self.img, (self._pos.x, self._pos.y))
 
         # Move directional pointer on canvas
@@ -107,3 +111,7 @@ class Player(Entity, Movable, Renderable, Shootable, Killable, Collidable):
         elif self.pos.y - self.height//2 > GAME_HEIGHT:
             # Beyond bottom edge of screen, move to left
             self._pos = Vector(self._pos.x, -self.height//2)
+
+    def collide_with_bullet(self, bullet):
+        if not self.invulnerable:
+            self.state.player_respawn()

@@ -45,7 +45,7 @@ class State:
 
 
 class GameState(State):
-    MAX_ASTEROIDS = 10                       # TODO: Balance this
+    MAX_ASTEROIDS = 7                       # TODO: Balance this
     ASTEROID_INTERVAL = 1                   # TODO: Balance this
 
     def __init__(self, game):
@@ -157,8 +157,12 @@ class GameState(State):
     def check_collisions(self):
         # Check player-bullet collisions
         self.player.check_bullet_collisions(self.asteroids+self.aliens)
+        for alien in self.aliens:
+           alien.check_bullet_collisions([self.player])
 
         # Check asteroid collisions with player
+    def player_respawn(self):
+        self.player = Player(self, self.game.root, self.canvas)
 
 
 class Game:
